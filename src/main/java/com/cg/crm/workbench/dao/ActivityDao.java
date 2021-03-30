@@ -23,4 +23,6 @@ public interface ActivityDao {
     Activity detail(String id);
 
     List<ActivityRemark> getRemarkListByAid(String activityId);
+
+    List<Activity> getActivityListByCid(String clueId);
 }

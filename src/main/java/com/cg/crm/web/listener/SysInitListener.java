@@ -1,8 +1,16 @@
 package com.cg.crm.web.listener;
 
+import com.cg.crm.settings.domain.DicValue;
+import com.cg.crm.settings.service.DicService;
+import com.cg.crm.settings.service.impl.DicServiceImpl;
+import com.cg.crm.utils.ServiceFactory;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SysInitListener implements ServletContextListener {
     @Override
@@ -12,8 +20,14 @@ public class SysInitListener implements ServletContextListener {
     //现在监听的是上下文域对象
         ServletContext application=event.getServletContext();
         //取数据字典
+        DicService dicService= (DicService) ServiceFactory.getService(new DicServiceImpl());
+        //管业务层要7个List，用一个map装7个List
+        Map<String, List<DicValue>> map=dicService.getAll();
+        Set<String> set=map.keySet();
+        for (String key:set){
+            application.setAttribute(key,map.get(key));
+        }
 
-       // application.setAttribute(key,数据字典);
     }
 
     @Override

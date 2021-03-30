@@ -4,6 +4,7 @@ import com.cg.crm.utils.SqlSessionUtil;
 import com.cg.crm.vo.PaginationVO;
 import com.cg.crm.workbench.dao.ActivityDao;
 import com.cg.crm.workbench.dao.ActivityRemarkDao;
+import com.cg.crm.workbench.dao.ClueActivityRelationDao;
 import com.cg.crm.workbench.domain.Activity;
 import com.cg.crm.workbench.domain.ActivityRemark;
 import com.cg.crm.workbench.service.ActivityService;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class ActivityServiceImpl implements ActivityService {
 private ActivityDao activityDao= SqlSessionUtil.getSqlSession().getMapper(ActivityDao.class);
 private ActivityRemarkDao activityRemarkDao=SqlSessionUtil.getSqlSession().getMapper(ActivityRemarkDao.class);
-
+private ClueActivityRelationDao clueActivityRelationDao=SqlSessionUtil.getSqlSession().getMapper(ClueActivityRelationDao.class);
     public boolean save(Activity a) {
         boolean flag= true;
         int count= activityDao.save(a);
@@ -112,5 +113,12 @@ private ActivityRemarkDao activityRemarkDao=SqlSessionUtil.getSqlSession().getMa
             flag=false;
         }
         return flag;
+    }
+
+    @Override
+    public List<Activity> getActivityListByCid(String clueId) {
+
+        List<Activity> aList=activityDao.getActivityListByCid(clueId);
+        return aList;
     }
 }

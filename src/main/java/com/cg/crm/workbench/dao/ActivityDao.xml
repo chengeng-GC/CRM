@@ -3,6 +3,22 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cg.crm.workbench.dao.ActivityDao">
+
+    <select id="getActivityListByCid" resultType="Activity">
+        select
+        r.id as id,
+        a.name,
+        a.startDate,
+        a.endDate,
+        u.name as owner
+        from tbl_activity a
+        join tbl_User u
+        on a.owner=u.id
+        join tbl_clue_activity_relation r
+        on a.id=r.activityId
+        where r.clueId=#{clueId}
+    </select>
+
     <select id="getRemarkListByAid" resultType="ActivityRemark">
         select * from tbl_activity_remark where activityId=#{activityId} order by createTime asc
     </select>

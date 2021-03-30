@@ -66,6 +66,7 @@
   <url-pattern>/workbench/activity/deleteRemark.do</url-pattern>
   <url-pattern>/workbench/activity/saveRemark.do</url-pattern>
   <url-pattern>/workbench/activity/updateRemark.do</url-pattern>
+
  </servlet-mapping>
  <!-- 市场活动控制器-->
  <servlet>
@@ -74,7 +75,13 @@
  </servlet>
  <servlet-mapping>
   <servlet-name>ClueController</servlet-name>
-  <url-pattern>/workbench/clue/xxx.do</url-pattern>
+  <url-pattern>/workbench/clue/getUserList.do</url-pattern>
+  <url-pattern>/workbench/clue/saveClue.do</url-pattern>
+  <url-pattern>/workbench/clue/pageList.do</url-pattern>
+  <url-pattern>/workbench/clue/detail.do</url-pattern>
+  <url-pattern>/workbench/clue/showActivityList.do</url-pattern>
+
+
 
  </servlet-mapping>
  </web-app>
