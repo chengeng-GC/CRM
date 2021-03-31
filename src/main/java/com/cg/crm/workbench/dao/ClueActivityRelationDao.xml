@@ -4,7 +4,21 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.ClueActivityRelationDao">
-	
+	<delete id="deleteById">
+        delete from tbl_clue_activity_relation where id=#{id}
+    </delete>
+
+    <insert id="add">
+        insert into tbl_clue_activity_relation(
+        id,
+        clueId,
+        activityId
+        )values (
+        #{id},
+        #{clueId},
+        #{activityId}
+        )
+    </insert>
 	
   	
 </mapper>

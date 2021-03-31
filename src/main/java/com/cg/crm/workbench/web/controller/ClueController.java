@@ -41,22 +41,63 @@ public class ClueController extends HttpServlet {
             pageList(req, resp);
         } else if ("/workbench/clue/detail.do".equals(path)) {
             detail(req,resp);
-        } else if ("/workbench/clue/showActivityList.do".equals(path)) {
-            showActivityList(req,resp);
+        } else if ("/workbench/clue/showActivityListByCid.do".equals(path)) {
+            showActivityListByCid(req,resp);
+        } else if ("/workbench/clue/unbund.do".equals(path)) {
+            unbund(req,resp);
+        } else if ("/workbench/clue/showAcitivityListByNameExceptClueId.do".equals(path)) {
+            showAcitivityListByNameExceptClueId(req,resp);
+        } else if ("/workbench/clue/bund.do".equals(path)) {
+            bund(req,resp);
+        } else if ("/workbench/clue/showAcitivityListByName.do".equals(path)) {
+            showAcitivityListByName(req,resp);
         } else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
-        } else if ("/workbench/clue/xxx.do".equals(path)) {
+        }else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
-        } else if ("/workbench/clue/xxx.do".equals(path)) {
-            //xxx(req,resp);
-        } else if ("/workbench/clue/xxx.do".equals(path)) {
-            //xxx(req,resp);
-        } else if ("/workbench/clue/xxx.do".equals(path)) {
+        }else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
         }
     }
 
-    private void showActivityList(HttpServletRequest req, HttpServletResponse resp) {
+    private void showAcitivityListByName(HttpServletRequest req, HttpServletResponse resp) {
+        ActivityService activityService= (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        String name =req.getParameter("name");
+        List<Activity> aList=activityService.getAcitivityListByName(name);
+        PrintJson.printJsonObj(resp,aList);
+
+    }
+
+    private void bund(HttpServletRequest req, HttpServletResponse resp) {
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        String[] aids= req.getParameterValues("aid");
+        String cid=req.getParameter("cid");
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("cid",cid);
+        map.put("aids",aids);
+        boolean flag= clueService.bund(map);
+        PrintJson.printJsonFlag(resp,flag);
+    }
+
+    private void showAcitivityListByNameExceptClueId(HttpServletRequest req, HttpServletResponse resp) {
+        ActivityService activityService= (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        String name =req.getParameter("name");
+        String clueId=req.getParameter("clueId");
+        Map<String,String> map=new HashMap<String, String>();
+        map.put("name",name);
+        map.put("clueId",clueId);
+        List<Activity> aList=activityService.getAcitivityListByNameExceptClueId(map);
+        PrintJson.printJsonObj(resp,aList);
+    }
+
+    private void unbund(HttpServletRequest req, HttpServletResponse resp) {
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        String id=req.getParameter("id");
+       boolean flag= clueService.unbund(id);
+       PrintJson.printJsonFlag(resp,flag);
+    }
+
+    private void showActivityListByCid(HttpServletRequest req, HttpServletResponse resp) {
         ActivityService activityService= (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
         String clueId=req.getParameter("clueId");
         List<Activity> alist= activityService.getActivityListByCid(clueId);

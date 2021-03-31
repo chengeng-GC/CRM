@@ -25,4 +25,8 @@ public interface ActivityDao {
     List<ActivityRemark> getRemarkListByAid(String activityId);
 
     List<Activity> getActivityListByCid(String clueId);
+
+    List<Activity> getAcitivityListByNameExceptClueId(Map<String,String> map);
+
+    List<Activity> getAcitivityListByName(String name);
 }

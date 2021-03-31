@@ -68,7 +68,7 @@
   <url-pattern>/workbench/activity/updateRemark.do</url-pattern>
 
  </servlet-mapping>
- <!-- 市场活动控制器-->
+ <!-- 线索控制器-->
  <servlet>
   <servlet-name>ClueController</servlet-name>
   <servlet-class>com.cg.crm.workbench.web.controller.ClueController</servlet-class>
@@ -79,7 +79,15 @@
   <url-pattern>/workbench/clue/saveClue.do</url-pattern>
   <url-pattern>/workbench/clue/pageList.do</url-pattern>
   <url-pattern>/workbench/clue/detail.do</url-pattern>
-  <url-pattern>/workbench/clue/showActivityList.do</url-pattern>
+  <url-pattern>/workbench/clue/showActivityListByCid.do</url-pattern>
+  <url-pattern>/workbench/clue/unbund.do</url-pattern>
+  <url-pattern>/workbench/clue/showAcitivityListByNameExceptClueId.do</url-pattern>
+  <url-pattern>/workbench/clue/bund.do</url-pattern>
+  <url-pattern>/workbench/clue/showAcitivityListByName.do</url-pattern>
+
+
+
+
 
 
 

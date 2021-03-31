@@ -121,4 +121,16 @@ private ClueActivityRelationDao clueActivityRelationDao=SqlSessionUtil.getSqlSes
         List<Activity> aList=activityDao.getActivityListByCid(clueId);
         return aList;
     }
+
+    @Override
+    public List<Activity> getAcitivityListByNameExceptClueId(Map<String,String> map) {
+        List<Activity> aList=activityDao.getAcitivityListByNameExceptClueId(map);
+        return aList;
+    }
+
+    @Override
+    public List<Activity> getAcitivityListByName(String name) {
+        List<Activity> aList=activityDao.getAcitivityListByName(name);
+        return aList;
+    }
 }

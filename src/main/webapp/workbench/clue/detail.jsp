@@ -54,11 +54,104 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 		showActivityList();
 
+		$("#aname").keydown(function (event) {
+
+			if (event.keyCode==13){
+				showModelActivityList();
+				//展现完后，要将模态窗口默认的回车行为（默认会刷新页面）禁用掉
+				return false;
+			}
+		})
+
+		$("#aname").blur(function () {
+		showModelActivityList();
+		})
+
+
+
+		//为全选的复选框绑定事件，触发全选操作
+		$("#qx").click(function () {
+			$("input[name=xz]").prop("checked",this.checked);
+		})
+		//动态生成的元素，不能以普通绑定事件的方式来操作，要以on的方式来触发事件
+		//语法：
+		//$(需要绑定元素的有效的外层元素 ).on(绑定事件的方式，需要绑定的元素的jquery对象，回调函数)
+		$("#model-activityBody").on("click",$("input[name=xz]"),function () {
+			$("#qx").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length);
+		})
+
+		//为关联按钮绑定事件，执行关联操作
+		$("#bundBtn").click(function () {
+			var $xz= $("input[name=xz]:checked");
+			if ($xz.length==0){
+				alert("请选择需要关联的活动");
+			}else {
+				//拼接data
+				var param="";
+				for (var i=0;i<$xz.length;i++){
+					param += "aid="+$($xz[i]).val();
+						param +="&";
+				}
+				param += "cid=${c.id}";
+				$.ajax({
+					url:"workbench/clue/bund.do",
+					data:param,
+					type: "post",
+					dataType:"json",
+					success:function(data){
+						if (data.success){
+							showActivityList();
+							$("#bundModal").modal("hide");
+							//复选框全取消
+							$("#qx").prop("checked",false);
+							//搜索框清空
+							$("#aname").val("");
+							//市场活动列表清空
+							$("#model-activityBody").html("");
+						}else {
+							alert("关联失败");
+						}
+					}
+				})
+			}
+		})
+
+
+
 	});
 
-	function showActivityList() {
+	function showModelActivityList() {
+		var name =$.trim($("#aname").val())
+		//查询并展现市场活动列表,排除已经关联的活动
 		$.ajax({
-			url:"workbench/clue/showActivityList.do",
+			url:"workbench/clue/showAcitivityListByNameExceptClueId.do",
+			data:{
+				"name":name,
+				"clueId":"${c.id}"
+			},
+			type: "get",
+			dataType:"json",
+			success:function(data){
+				//aList
+				var html="";
+				$.each(data,function (i,n) {
+					html += '<tr >'
+					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td> '
+					html += '<td>'+n.name+'</td>'
+					html += '<td>'+n.startDate+'</td>'
+					html += '<td>'+n.endDate+'</td>'
+					html += '<td>'+n.owner+'</td>'
+					html += '</tr>'
+				})
+				$("#model-activityBody").html(html)
+			}
+		})
+	}
+
+	function showActivityList() {
+
+		$.ajax({
+			url:"workbench/clue/showActivityListByCid.do",
 			data:{
 				"clueId":"${c.id}"
 			},
@@ -84,6 +177,22 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	function unbund(id) {
 		//让传过来的id是relation表的id
+		$.ajax({
+			url:"workbench/clue/unbund.do",
+			data:{
+				"id":id
+			},
+			type: "post",
+			dataType:"json",
+			success:function(data){
+				if (data.success){
+					showActivityList();
+				}else {
+					alert("解除关联失败");
+				}
+			}
+		})
+
 	}
 	
 </script>
@@ -105,7 +214,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" id="aname" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -113,7 +222,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<table id="activityTable" class="table table-hover" style="width: 900px; position: relative;top: 10px;">
 						<thead>
 							<tr style="color: #B3B3B3;">
-								<td><input type="checkbox"/></td>
+								<td><input type="checkbox" id="qx"/></td>
 								<td>名称</td>
 								<td>开始日期</td>
 								<td>结束日期</td>
@@ -121,27 +230,27 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								<td></td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="checkbox"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="model-activityBody">
+<%--							<tr>--%>
+<%--								<td><input type="checkbox"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
+<%--							<tr>--%>
+<%--								<td><input type="checkbox"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
 						</tbody>
 					</table>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">关联</button>
+					<button type="button" class="btn btn-primary" id="bundBtn">关联</button>
 				</div>
 			</div>
 		</div>
@@ -314,7 +423,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<h3>${c.fullname}${c.appellation}<small>${c.company}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 500px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/clue/convert.jsp';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
+			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/clue/convert.jsp?id=${c.id}&fullname=${c.fullname}&appellation=${c.appellation}&company=${c.company}&owner=${c.owner}';"><span class="glyphicon glyphicon-retweet"></span> 转换</button>
 			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
 			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>

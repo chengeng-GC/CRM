@@ -29,4 +29,8 @@ public interface ActivityService {
     boolean updateRemark(ActivityRemark ar);
 
     List<Activity> getActivityListByCid(String clueId);
+
+    List<Activity> getAcitivityListByNameExceptClueId(Map<String,String> map);
+
+    List<Activity> getAcitivityListByName(String name);
 }
