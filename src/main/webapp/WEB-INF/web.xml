@@ -84,12 +84,18 @@
   <url-pattern>/workbench/clue/showAcitivityListByNameExceptClueId.do</url-pattern>
   <url-pattern>/workbench/clue/bund.do</url-pattern>
   <url-pattern>/workbench/clue/showAcitivityListByName.do</url-pattern>
-
-
-
-
-
-
-
+  <url-pattern>/workbench/clue/convert.do</url-pattern>
  </servlet-mapping>
+
+<!-- 交易控制器-->
+ <servlet>
+  <servlet-name>TranController</servlet-name>
+  <servlet-class>com.cg.crm.workbench.web.controller.TranController</servlet-class>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>TranController</servlet-name>
+  <url-pattern>/workbench/transaction/save.do</url-pattern>
+  <url-pattern>/workbench/transaction/getCustomerName.do</url-pattern>
+ </servlet-mapping>
+
  </web-app>

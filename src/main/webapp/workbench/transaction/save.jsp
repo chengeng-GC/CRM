@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 String basePath = request.getScheme() + "://" + request.getServerName() + ":" +     request.getServerPort() + request.getContextPath();
 %>
@@ -16,8 +17,70 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
+
+<script type="text/javascript" >
+<%--    一个阶段对应一个可能性
+我们现在可以将阶段和可能性想象成是一种键值对之间的对应关系
+以阶段为key，通过选中的阶段，触发可能性value
+stage  possibility
+key  value
+01资质审查  10
+02需求分析  25
+03价值建议  40
+07成交  100
+08  0
+09  0
+对于以上的数据，通过观察得到结论
+（1）数据量不是很大
+（2）这是一种键值对的对应关系
+如果同时满足以上两种结论，那么我们将这样的数据保存到数据库表中就没有什么意义了
+如果遇到这种情况，我们需要用到properties属性文件来进行保存
+--%>
+	$(function(){
+		$("#create-customerName").typeahead({
+			source: function (query, process) {
+				$.get(
+						"workbench/transaction/getCustomerName.do",
+						{ "name" : query },
+						function (data) {
+							//alert(data);
+							//客户名称String [{名称1},{名称2]]
+
+							process(data);
+						},
+						"json"
+				);
+			},
+			delay: 500
+		});
+
+
+		$(".timebottom").datetimepicker({
+			minView:"month",
+			language:'zh-CN',
+			format:'yyyy-mm-dd',
+			autoclose:true,
+			todayBtn:true,
+			pickerPosition:"bottom-left"
+		});
+
+		$(".timetop").datetimepicker({
+			minView:"month",
+			language:'zh-CN',
+			format:'yyyy-mm-dd',
+			autoclose:true,
+			todayBtn:true,
+			pickerPosition:"top-left"
+		});
+
+	});
+
+</script>
 
 </head>
+
+
 <body>
 
 	<!-- 查找市场活动 -->	
@@ -133,9 +196,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-transactionOwner">
-				  <option>zhangsan</option>
-				  <option>lisi</option>
-				  <option>wangwu</option>
+				<c:forEach items="${uList}" var="u">
+					<option value="${u.id}" ${user.id eq u.id?"selected":""}>${u.name}</option>
+				</c:forEach>
 				</select>
 			</div>
 			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
@@ -149,30 +212,24 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-transactionName">
 			</div>
-			<label for="create-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
+			<label for="create-expectedClosingDate" class="col-sm-2 control-label ">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-expectedClosingDate">
+				<input type="text" class="form-control timebottom" id="create-expectedClosingDate">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-accountName" placeholder="支持自动补全，输入客户不存在则新建">
+				<input type="text" class="form-control" id="create-customerName" placeholder="支持自动补全，输入客户不存在则新建">
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
 			  <select class="form-control" id="create-transactionStage">
 			  	<option></option>
-			  	<option>资质审查</option>
-			  	<option>需求分析</option>
-			  	<option>价值建议</option>
-			  	<option>确定决策者</option>
-			  	<option>提案/报价</option>
-			  	<option>谈判/复审</option>
-			  	<option>成交</option>
-			  	<option>丢失的线索</option>
-			  	<option>因竞争丢失关闭</option>
+			  	<c:forEach items="${stage}" var="s">
+					<option value="${s.value}">${s.text}</option>
+				</c:forEach>
 			  </select>
 			</div>
 		</div>
@@ -182,8 +239,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-transactionType">
 				  <option></option>
-				  <option>已有业务</option>
-				  <option>新业务</option>
+					<c:forEach items="${transactionType}" var="t">
+						<option value="${t.value}">${t.text}</option>
+					</c:forEach>
 				</select>
 			</div>
 			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
@@ -197,32 +255,23 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div class="col-sm-10" style="width: 300px;">
 				<select class="form-control" id="create-clueSource">
 				  <option></option>
-				  <option>广告</option>
-				  <option>推销电话</option>
-				  <option>员工介绍</option>
-				  <option>外部介绍</option>
-				  <option>在线商场</option>
-				  <option>合作伙伴</option>
-				  <option>公开媒介</option>
-				  <option>销售邮件</option>
-				  <option>合作伙伴研讨会</option>
-				  <option>内部研讨会</option>
-				  <option>交易会</option>
-				  <option>web下载</option>
-				  <option>web调研</option>
-				  <option>聊天</option>
+					<c:forEach items="${source}" var="s">
+						<option value="${s.value}">${s.text}</option>
+					</c:forEach>
 				</select>
 			</div>
 			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-activitySrc">
+				<input type="text" class="form-control" id="create-activitySrc" value="做项目12">
+				<input type="hidden" value="0f882093f95043caac978c537fc7e380">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName">
+				<input type="text" class="form-control" id="create-contactsName" value="马云">
+				<input type="hidden" value="6fe7f65577b440f688d2f915b3d0175c">
 			</div>
 		</div>
 		
@@ -243,7 +292,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-nextContactTime">
+				<input type="text" class="form-control timetop" id="create-nextContactTime">
 			</div>
 		</div>
 		

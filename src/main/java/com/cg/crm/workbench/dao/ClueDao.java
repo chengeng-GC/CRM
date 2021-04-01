@@ -15,4 +15,8 @@ public interface ClueDao {
     int getCountByCondition(Map<String, Object> map);
 
     Clue getById(String id);
+
+    Clue showById(String id);
+
+    int deleteById(String clueId);
 }

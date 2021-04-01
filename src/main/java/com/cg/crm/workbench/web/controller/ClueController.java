@@ -11,6 +11,7 @@ import com.cg.crm.vo.PaginationVO;
 import com.cg.crm.workbench.domain.Activity;
 import com.cg.crm.workbench.domain.ActivityRemark;
 import com.cg.crm.workbench.domain.Clue;
+import com.cg.crm.workbench.domain.Tran;
 import com.cg.crm.workbench.service.ActivityService;
 import com.cg.crm.workbench.service.ClueService;
 import com.cg.crm.workbench.service.impl.ActivityServiceImpl;
@@ -31,7 +32,6 @@ public class ClueController extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //获取请求地址
         String path = req.getServletPath();
-        System.out.println("1");
         //判断执行方法
         if ("/workbench/clue/getUserList.do".equals(path)) {
             getUserList(req, resp);
@@ -51,13 +51,56 @@ public class ClueController extends HttpServlet {
             bund(req,resp);
         } else if ("/workbench/clue/showAcitivityListByName.do".equals(path)) {
             showAcitivityListByName(req,resp);
-        } else if ("/workbench/clue/xxx.do".equals(path)) {
-            //xxx(req,resp);
-        }else if ("/workbench/clue/xxx.do".equals(path)) {
-            //xxx(req,resp);
+        } else if ("/workbench/clue/convert.do".equals(path)) {
+            convert(req,resp);
         }else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
         }
+
+    }
+
+    private void convert(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String clueId=req.getParameter("clueId");
+        String flag=req.getParameter("flag");
+        String createBy = ((User) req.getSession().getAttribute("user")).getName();
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+
+        //接收是否需要创建交易的标记
+        Tran t=null;
+        if ("a".equals(flag)){
+            t=new Tran();
+            //接收表单中的参数
+            String money=req.getParameter("money");
+            String name=req.getParameter("name");
+            String expectedDate=req.getParameter("expectedDate");
+            String stage=req.getParameter("stage");
+            String activityId=req.getParameter("activityId");
+            String id=UUIDUtil.getUUID();
+            String createTime = DateTimeUtil.getSysTime();
+
+            t.setId(id);
+            t.setMoney(money);
+            t.setName(name);
+            t.setExpectedDate(expectedDate);
+            t.setStage(stage);
+            t.setActivityId(activityId);
+            t.setCreateTime(createTime);
+            t.setCreateBy(createBy);
+
+            boolean flag1=clueService.convert(clueId,t,createBy);
+            if (flag1){
+                resp.sendRedirect(req.getContextPath()+"/workbench/clue/index.jsp");
+            }
+
+        }else {
+            boolean flag1=clueService.convert(clueId,t,createBy);
+            if (flag1){
+                resp.sendRedirect(req.getContextPath()+"/workbench/clue/index.jsp");
+            }
+
+        }
+
+
     }
 
     private void showAcitivityListByName(HttpServletRequest req, HttpServletResponse resp) {

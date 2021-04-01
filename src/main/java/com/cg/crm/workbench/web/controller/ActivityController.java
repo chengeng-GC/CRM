@@ -28,7 +28,6 @@ public class ActivityController extends HttpServlet {
     protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //获取请求地址
         String path=req.getServletPath();
-        System.out.println("1");
         //判断执行方法
         if ("/workbench/activity/getUserList.do".equals(path)){
             getUserList(req,resp);

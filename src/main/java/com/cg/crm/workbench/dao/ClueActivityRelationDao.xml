@@ -20,7 +20,12 @@
         )
     </insert>
 	
-  	
+  	<select id="getByClueId" resultType="ClueActivityRelation">
+        select * from tbl_clue_activity_relation where clueId=#{clueId}
+    </select>
+    <delete id="deleteByClueId">
+        delete from tbl_clue_activity_relation where clueId=#{clueId}
+    </delete>
 </mapper>
 
 
