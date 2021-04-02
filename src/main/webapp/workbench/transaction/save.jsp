@@ -1,7 +1,11 @@
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Set" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 String basePath = request.getScheme() + "://" + request.getServerName() + ":" +     request.getServerPort() + request.getContextPath();
+	Map<String,String> pMap= (Map<String, String>) application.getAttribute("pMap");
+	Set<String> set=pMap.keySet();
 %>
 <!DOCTYPE html>
 <html>
@@ -36,8 +40,25 @@ key  value
 （2）这是一种键值对的对应关系
 如果同时满足以上两种结论，那么我们将这样的数据保存到数据库表中就没有什么意义了
 如果遇到这种情况，我们需要用到properties属性文件来进行保存
+但是properties属性文件不支持中文，要先转个码再存
+然后将文件解析在服务器缓存中.application.setAttribute
 --%>
+
+//把pMap（java中键值对）转成json（jsp中键值对）
+var json={
+	<%
+	for (String key:set){
+		String value=pMap.get(key);
+	%>
+	"<%=key%>":<%=value%>,
+	<%
+	}
+	%>
+
+};
+
 	$(function(){
+		//自动补全插件
 		$("#create-customerName").typeahead({
 			source: function (query, process) {
 				$.get(
@@ -73,6 +94,25 @@ key  value
 			todayBtn:true,
 			pickerPosition:"top-left"
 		});
+
+
+		$("#create-stage").change(function () {
+			//取得选中的阶段
+			var stage=$("#create-stage").val();
+
+			//取可能性
+			//现在以json.key的形式不能取得value
+			//因为stage是一个可变的变量
+			//如果是这样的key，那么就不能以传统的json.key的形式来取值
+			//要使用的取值方式为json[key]
+			var possibility=json[stage];
+			$("#create-possibility").val(possibility);
+		})
+
+		$("#addBtn").click(function () {
+			$("#tranForm").submit();
+
+		})
 
 	});
 
@@ -186,16 +226,16 @@ key  value
 	<div style="position:  relative; left: 30px;">
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
-			<button type="button" class="btn btn-primary">保存</button>
+			<button type="button" class="btn btn-primary" id="addBtn">保存</button>
 			<button type="button" class="btn btn-default">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>
-	<form class="form-horizontal" role="form" style="position: relative; top: -30px;">
+	<form class="form-horizontal" id="tranForm" action="workbench/transaction/add.do"  role="form" style="position: relative; top: -30px;">
 		<div class="form-group">
 			<label for="create-transactionOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionOwner">
+				<select class="form-control" id="create-transactionOwner" name="owner">
 				<c:forEach items="${uList}" var="u">
 					<option value="${u.id}" ${user.id eq u.id?"selected":""}>${u.name}</option>
 				</c:forEach>
@@ -203,29 +243,29 @@ key  value
 			</div>
 			<label for="create-amountOfMoney" class="col-sm-2 control-label">金额</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-amountOfMoney">
+				<input type="text" class="form-control" id="create-amountOfMoney" name="money">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-transactionName">
+				<input type="text" class="form-control" id="create-transactionName" name="name">
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label ">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control timebottom" id="create-expectedClosingDate">
+				<input type="text" class="form-control timebottom" id="create-expectedClosingDate" name="expectedDate">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-accountName" class="col-sm-2 control-label">客户名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-customerName" placeholder="支持自动补全，输入客户不存在则新建">
+				<input type="text" class="form-control" id="create-customerName" name="customerName" placeholder="支持自动补全，输入客户不存在则新建">
 			</div>
 			<label for="create-transactionStage" class="col-sm-2 control-label">阶段<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-			  <select class="form-control" id="create-transactionStage">
+			  <select class="form-control" id="create-stage" name="stage">
 			  	<option></option>
 			  	<c:forEach items="${stage}" var="s">
 					<option value="${s.value}">${s.text}</option>
@@ -237,7 +277,7 @@ key  value
 		<div class="form-group">
 			<label for="create-transactionType" class="col-sm-2 control-label">类型</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-transactionType">
+				<select class="form-control" id="create-transactionType" name="type">
 				  <option></option>
 					<c:forEach items="${transactionType}" var="t">
 						<option value="${t.value}">${t.text}</option>
@@ -246,14 +286,14 @@ key  value
 			</div>
 			<label for="create-possibility" class="col-sm-2 control-label">可能性</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-possibility">
+				<input type="text" class="form-control" id="create-possibility" >
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-clueSource" class="col-sm-2 control-label">来源</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<select class="form-control" id="create-clueSource">
+				<select class="form-control" id="create-clueSource" name="source">
 				  <option></option>
 					<c:forEach items="${source}" var="s">
 						<option value="${s.value}">${s.text}</option>
@@ -263,7 +303,7 @@ key  value
 			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-activitySrc" value="做项目12">
-				<input type="hidden" value="0f882093f95043caac978c537fc7e380">
+				<input type="hidden" value="0f882093f95043caac978c537fc7e380" name="activityId">
 			</div>
 		</div>
 		
@@ -271,28 +311,28 @@ key  value
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
 				<input type="text" class="form-control" id="create-contactsName" value="马云">
-				<input type="hidden" value="6fe7f65577b440f688d2f915b3d0175c">
+				<input type="hidden" value="6fe7f65577b440f688d2f915b3d0175c" name="contactsId">
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-describe" class="col-sm-2 control-label">描述</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-describe"></textarea>
+				<textarea class="form-control" rows="3" id="create-describe" name="description"></textarea>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-contactSummary" class="col-sm-2 control-label">联系纪要</label>
 			<div class="col-sm-10" style="width: 70%;">
-				<textarea class="form-control" rows="3" id="create-contactSummary"></textarea>
+				<textarea class="form-control" rows="3" id="create-contactSummary" name="contactSummary"></textarea>
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control timetop" id="create-nextContactTime">
+				<input type="text" class="form-control timetop" id="create-nextContactTime" name="nextContactTime">
 			</div>
 		</div>
 		

@@ -8,9 +8,7 @@ import com.cg.crm.utils.ServiceFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SysInitListener implements ServletContextListener {
     @Override
@@ -28,6 +26,20 @@ public class SysInitListener implements ServletContextListener {
             application.setAttribute(key,map.get(key));
         }
 
+
+        //处理Stage2Possibility.properties文件步骤:
+        //解析该文件，将属性文件中的键值对关系处理成为java中键值对关系(map)
+        //获取配置文件
+        ResourceBundle rb=ResourceBundle.getBundle("Stage2Possibility");
+        Map<String,String> pMap=new HashMap<String, String>();
+        Enumeration<String> e=rb.getKeys();
+        while (e.hasMoreElements()){
+            String key=e.nextElement();
+           String value= rb.getString(key);
+           pMap.put(key,value);
+        }
+        //把map放在服务器缓存中
+        application.setAttribute("pMap",pMap);
     }
 
     @Override
