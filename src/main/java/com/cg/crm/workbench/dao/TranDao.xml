@@ -4,6 +4,37 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.TranDao">
+    <select id="detail" resultType="Tran">
+        select
+            t.id,
+            u.name as owner,
+            t.money,
+            t.name,
+            t.expectedDate,
+            cus.name as customerId,
+            t.stage,
+            t.type,
+            t.source,
+            act.name as activityId,
+            con.fullname as contactsId,
+            t.createBy,
+            t.createTime,
+            t.editBy,
+            t.editTime,
+            t.description,
+            t.contactSummary,
+            t.nextContactTime
+        from tbl_tran t
+        join tbl_user u
+        on t.owner=u.id
+        join tbl_customer cus
+        on t.customerId=cus.id
+        left join tbl_activity act
+        on t.activityId=act.id
+        left join tbl_contacts con
+        on t.contactsId=con.id
+        where t.id=#{id}
+    </select>
 	<insert id="add">
         insert into tbl_tran(
             id,

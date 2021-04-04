@@ -12,6 +12,7 @@ import com.cg.crm.workbench.domain.TranHistory;
 import com.cg.crm.workbench.service.TranService;
 
 import java.util.Date;
+import java.util.List;
 
 public class TranServiceImpl implements TranService {
     private TranDao tranDao = SqlSessionUtil.getSqlSession().getMapper(TranDao.class);
@@ -59,7 +60,18 @@ public class TranServiceImpl implements TranService {
         }
 
 
+        return flag;
+    }
 
-        return false;
+    @Override
+    public Tran detail(String id) {
+        Tran t=tranDao.detail(id);
+        return t;
+    }
+
+    @Override
+    public List<TranHistory> showHistoryListByTranId(String tranId) {
+       List<TranHistory> thList= tranHistoryDao.getListByTranId(tranId);
+        return thList;
     }
 }

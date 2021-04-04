@@ -23,7 +23,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 
-<script type="text/javascript" >
+<script >
 <%--    一个阶段对应一个可能性
 我们现在可以将阶段和可能性想象成是一种键值对之间的对应关系
 以阶段为key，通过选中的阶段，触发可能性value
@@ -58,6 +58,26 @@ var json={
 };
 
 	$(function(){
+        $(".time1").datetimepicker({
+            minView: "month",
+            language: 'zh-CN',
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "bottom-left"
+        });
+
+        $(".time2").datetimepicker({
+            minView: "month",
+            language: 'zh-CN',
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayBtn: true,
+            pickerPosition: "top-left"
+        });
+
+
+
 		//自动补全插件
 		$("#create-customerName").typeahead({
 			source: function (query, process) {
@@ -77,24 +97,6 @@ var json={
 		});
 
 
-		$(".timebottom").datetimepicker({
-			minView:"month",
-			language:'zh-CN',
-			format:'yyyy-mm-dd',
-			autoclose:true,
-			todayBtn:true,
-			pickerPosition:"bottom-left"
-		});
-
-		$(".timetop").datetimepicker({
-			minView:"month",
-			language:'zh-CN',
-			format:'yyyy-mm-dd',
-			autoclose:true,
-			todayBtn:true,
-			pickerPosition:"top-left"
-		});
-
 
 		$("#create-stage").change(function () {
 			//取得选中的阶段
@@ -113,6 +115,9 @@ var json={
 			$("#tranForm").submit();
 
 		})
+
+
+
 
 	});
 
@@ -227,7 +232,7 @@ var json={
 		<h3>创建交易</h3>
 	  	<div style="position: relative; top: -40px; left: 70%;">
 			<button type="button" class="btn btn-primary" id="addBtn">保存</button>
-			<button type="button" class="btn btn-default">取消</button>
+			<button type="button" class="btn btn-default" onclick="window.location.href='workbench/transaction/index.jsp'">取消</button>
 		</div>
 		<hr style="position: relative; top: -40px;">
 	</div>
@@ -254,7 +259,7 @@ var json={
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label ">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control timebottom" id="create-expectedClosingDate" name="expectedDate">
+				<input type="text" class="form-control time1" id="create-expectedClosingDate" name="expectedDate">
 			</div>
 		</div>
 		
@@ -332,7 +337,7 @@ var json={
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control timetop" id="create-nextContactTime" name="nextContactTime">
+				<input type="text" class="form-control time2" id="create-nextContactTime" name="nextContactTime">
 			</div>
 		</div>
 		
