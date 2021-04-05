@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +42,8 @@ public class TranController extends HttpServlet {
             detail(req,resp);
         } else if ("/workbench/transaction/showHistoryListByTranId.do".equals(path)) {
             showHistoryListByTranId(req,resp);
-        } else if ("/workbench/transaction/xxx.do".equals(path)) {
-            //xxx(req,resp);
+        } else if ("/workbench/transaction/changeState.do".equals(path)) {
+            changeState(req,resp);
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
             //xxx(req,resp);
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
@@ -52,6 +53,39 @@ public class TranController extends HttpServlet {
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
             //xxx(req,resp);
         }
+    }
+
+    private void changeState(HttpServletRequest req, HttpServletResponse resp) {
+        TranService  tranService= (TranService) ServiceFactory.getService(new TranServiceImpl());
+        String id=req.getParameter("id");
+        String stage=req.getParameter("stage");
+        String money=req.getParameter("money");
+        String expectedDate=req.getParameter("expectedDate");
+        String editBy= ((User)req.getSession().getAttribute("user")).getName();
+        String editTime= DateTimeUtil.getSysTime();
+
+        Tran t=new Tran();
+        t.setId(id);
+        t.setStage(stage);
+        t.setMoney(money);
+        t.setExpectedDate(expectedDate);
+        t.setEditBy(editBy);
+        t.setEditTime(editTime);
+
+        Map<String,String> pMap= (Map<String, String>) req.getServletContext().getAttribute("pMap");
+        String possibility=pMap.get(stage);
+        t.setPossibility(possibility);
+
+        boolean flag=tranService.changeStage(t);
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("success",flag);
+        map.put("t",t);
+
+        PrintJson.printJsonObj(resp,map);
+
+
+
+
     }
 
     private void showHistoryListByTranId(HttpServletRequest req, HttpServletResponse resp) {

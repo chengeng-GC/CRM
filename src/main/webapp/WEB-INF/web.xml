@@ -99,6 +99,7 @@
   <url-pattern>/workbench/transaction/add.do</url-pattern>
   <url-pattern>/workbench/transaction/detail.do</url-pattern>
   <url-pattern>/workbench/transaction/showHistoryListByTranId.do</url-pattern>
+  <url-pattern>/workbench/transaction/changeState.do</url-pattern>
 
 
 

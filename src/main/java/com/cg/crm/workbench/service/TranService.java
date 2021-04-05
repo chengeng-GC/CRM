@@ -11,4 +11,6 @@ public interface TranService {
     Tran detail(String id);
 
     List<TranHistory> showHistoryListByTranId(String tranId);
+
+    boolean changeStage(Tran t);
 }
