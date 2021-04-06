@@ -44,8 +44,8 @@ public class TranController extends HttpServlet {
             showHistoryListByTranId(req,resp);
         } else if ("/workbench/transaction/changeState.do".equals(path)) {
             changeState(req,resp);
-        } else if ("/workbench/transaction/xxx.do".equals(path)) {
-            //xxx(req,resp);
+        } else if ("/workbench/transaction/getCharts.do".equals(path)) {
+            getCharts(req,resp);
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
             //xxx(req,resp);
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
@@ -53,6 +53,12 @@ public class TranController extends HttpServlet {
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
             //xxx(req,resp);
         }
+    }
+
+    private void getCharts(HttpServletRequest req, HttpServletResponse resp) {
+        TranService  tranService= (TranService) ServiceFactory.getService(new TranServiceImpl());
+        Map<String,Object> map=tranService.getCharts();
+        PrintJson.printJsonObj(resp,map);
     }
 
     private void changeState(HttpServletRequest req, HttpServletResponse resp) {

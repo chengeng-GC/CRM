@@ -12,7 +12,9 @@ import com.cg.crm.workbench.domain.TranHistory;
 import com.cg.crm.workbench.service.TranService;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TranServiceImpl implements TranService {
     private TranDao tranDao = SqlSessionUtil.getSqlSession().getMapper(TranDao.class);
@@ -96,5 +98,15 @@ public class TranServiceImpl implements TranService {
             flag=false;
         }
         return flag;
+    }
+
+    @Override
+    public Map<String, Object> getCharts() {
+        int total=tranDao.getTotal();
+        List<Map<String,Object>> dataList=tranDao.getCharts();
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("total",total);
+        map.put("dataList",dataList);
+        return map;
     }
 }
