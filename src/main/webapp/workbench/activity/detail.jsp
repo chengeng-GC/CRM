@@ -9,8 +9,13 @@
 <meta charset="UTF-8">
 
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+    <link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
+
+    <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+    <%--	时间选择器（日历）控件--%>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script type="text/javascript">
 
@@ -125,6 +130,86 @@
                     }
                 })
             }
+        })
+        //为编辑按钮绑定事件，打开编辑市场活动模态窗口
+        $("#editBtn").click(function () {
+            //时间（日历）选择控件
+            $(".time").datetimepicker({
+                minView: "month",
+                language:  'zh-CN',
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayBtn: true,
+                pickerPosition: "bottom-left"
+            });
+
+
+            //走后台，取得用户信息列表，为所有者列表添加option
+            $.ajax({
+                url : "workbench/activity/getUserList.do",
+                type: "get",
+                dataType:"json",
+                success:function(data){
+                    var html="";
+                    $.each(data,function (i,n) {
+                        html +="<option value='"+n.id+"'>"+n.name+"</option>";
+                    })
+                    $("#edit-owner").html(html);
+                    //当前用户作为下拉列表的默认选项
+                    //在js中使用el表达式，el表达式一定要套用在字符串中
+                    $("#edit-owner").val("${user.id}");
+                    //所有者下拉框处理完毕后,展现模态窗口
+                    $("#editActivityModal").modal("show");
+                }
+            })
+        })
+
+        //为更新按钮绑定点击事件,执行更新操作
+        $("#updateBtn").click(function () {
+            $.ajax({
+                url:"workbench/activity/update.do",
+                data:{
+                    "id":"${a.id}",
+                    "owner":$.trim($("#edit-owner").val()),
+                    "name":$.trim($("#edit-name").val()),
+                    "startDate":$.trim($("#edit-startDate").val()),
+                    "endDate":$.trim($("#edit-endDate").val()),
+                    "cost":$.trim($("#edit-cost").val()),
+                    "description":$.trim($("#edit-description").val())
+                },
+                type: "post",
+                dataType:"json",
+                success:function(data){
+                    if (data.success){
+                        //更新成功后,刷新下页面
+                        //当前页数不变，每页的条数不变
+                       window.location.href="workbench/activity/detail.do?id=${a.id}";
+                    }else {
+                        alert("更新市场活动失败");
+                    }
+                    //关闭模态窗口
+                    $("#editActivityModal").modal("hide");
+                }
+            })
+        })
+        //为删除按钮绑定事件，执行删除操作
+        $("#deleteBtn").click(function () {
+            $.ajax({
+                url:"workbench/activity/delete.do",
+                data:{
+                    "id":"${a.id}"
+                },
+                type: "post",
+                dataType:"json",
+                success:function(data){
+                    if (data.success){
+                        //删除成功后,回到市场活动index页面
+                        window.location.href="workbench/activity/index.jsp";
+                    }else {
+                        alert("删除市场活动失败");
+                    }
+                }
+            })
         })
 
 	});
@@ -246,40 +331,38 @@
                         <div class="form-group">
                             <label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <select class="form-control" id="edit-marketActivityOwner">
-                                    <option>zhangsan</option>
-                                    <option>lisi</option>
-                                    <option>wangwu</option>
+                                <select class="form-control" id="edit-owner">
+
                                 </select>
                             </div>
                             <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-marketActivityName" value="发传单">
+                                <input type="text" class="form-control" id="edit-name" value="${a.name}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+                                <input type="text" class="form-control time" id="edit-startDate" value="${a.startDate}" readonly>
                             </div>
                             <label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+                                <input type="text" class="form-control time" id="edit-endDate" value="${a.endDate}" readonly>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-cost" class="col-sm-2 control-label">成本</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-cost" value="5,000">
+                                <input type="text" class="form-control" id="edit-cost" value="${a.cost}">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="edit-describe" class="col-sm-2 control-label">描述</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+                                <textarea class="form-control" rows="3" id="edit-description">${a.description}</textarea>
                             </div>
                         </div>
 
@@ -288,7 +371,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                    <button type="button" class="btn btn-primary" id="updateBtn">更新</button>
                 </div>
             </div>
         </div>
@@ -305,8 +388,8 @@
 			<h3>市场活动-${a.name} <small>${a.startDate} ~ ${a.endDate}</small></h3>
 		</div>
 		<div style="position: relative; height: 50px; width: 250px;  top: -72px; left: 700px;">
-			<button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
-			<button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+			<button type="button" class="btn btn-default" id="editBtn"><span class="glyphicon glyphicon-edit"></span> 编辑</button>
+			<button type="button" id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 		</div>
 	</div>
 	
@@ -323,7 +406,7 @@
 
 		<div style="position: relative; left: 40px; height: 30px; top: 10px;">
 			<div style="width: 300px; color: gray;">开始日期</div>
-			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${a.startDate}0</b></div>
+			<div style="width: 300px;position: relative; left: 200px; top: -20px;"><b>${a.startDate}</b></div>
 			<div style="width: 300px;position: relative; left: 450px; top: -40px; color: gray;">结束日期</div>
 			<div style="width: 300px;position: relative; left: 650px; top: -60px;"><b>${a.endDate}</b></div>
 			<div style="height: 1px; width: 400px; background: #D5D5D5; position: relative; top: -60px;"></div>
