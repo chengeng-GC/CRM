@@ -10,7 +10,18 @@
     <delete id="deleteByClueId">
         delete from tbl_clue_remark where clueId=#{clueId}
     </delete>
-
+    <select id="getCountByCids" resultType="int">
+        select count(*) from tbl_clue_remark where clueId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}
+        </foreach>
+    </select>
+    <delete id="deleteByCids">
+        delete from tbl_clue_remark where clueId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}
+        </foreach>
+    </delete>
 </mapper>
 
 

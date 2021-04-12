@@ -249,5 +249,24 @@ public class ClueServiceImpl implements ClueService {
         return flag;
     }
 
+    @Override
+    public boolean delete(String[] ids) {
+
+        boolean flag=true;
+        //查询出需要删除的备注的数量
+        int count1 = clueRemarkDao.getCountByCids(ids);
+        //删除备注，返回受到影响的条数（实际删除的数量）
+        int count2=clueRemarkDao.deleteByCids(ids);
+        if (count1!=count2){
+            flag=false;
+        }
+        //删除市场活动
+        int count3=clueDao.deleteByIds(ids);
+        if (count3!=ids.length){
+            flag=false;
+        }
+        return flag;
+    }
+
 
 }

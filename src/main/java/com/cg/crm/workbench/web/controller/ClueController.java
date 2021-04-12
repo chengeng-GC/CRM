@@ -53,10 +53,23 @@ public class ClueController extends HttpServlet {
             showAcitivityListByName(req,resp);
         } else if ("/workbench/clue/convert.do".equals(path)) {
             convert(req,resp);
+        }else if ("/workbench/clue/delete.do".equals(path)) {
+            delete(req,resp);
+        }else if ("/workbench/clue/xxx.do".equals(path)) {
+            //xxx(req,resp);
+        }else if ("/workbench/clue/xxx.do".equals(path)) {
+            //xxx(req,resp);
         }else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
         }
 
+    }
+
+    private void delete(HttpServletRequest req, HttpServletResponse resp) {
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        String ids[]=req.getParameterValues("id");
+        boolean flag= clueService.delete(ids);
+        PrintJson.printJsonFlag(resp,flag);
     }
 
     private void convert(HttpServletRequest req, HttpServletResponse resp) throws IOException {

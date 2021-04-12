@@ -98,7 +98,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		$("#qx").click(function () {
 			$("input[name=xz]").prop("checked",this.checked);
 		})
-		//动态生成的元素，不能以普通绑定事件的方式来操作，要以on的方式来触发事件
+
 		//语法：
 		//$(需要绑定元素的有效的外层元素 ).on(绑定事件的方式，需要绑定的元素的jquery对象，回调函数)
 		$("#clueBody").on("click",$("input[name=xz]"),function () {
@@ -118,8 +118,49 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			pageList(1,$("#cluePage").bs_pagination('getOption','rowsPerPage'));
 		})
 
+//为删除按钮绑定事件,执行市场活动删除操作
+		$("#deleteBtn").click(function () {
+			//找到复选框中所有√的jquery对象
+			var $xz= $("input[name=xz]:checked");
+			if ($xz.length==0){
+				alert("请选择需要删除的记录");
+			}else {
+				//给用户一个提示，避免误删
+				if (confirm("确定删除所选中记录吗？")){
+					var param="";
+					//将$xz中的每一个dom对象遍历出来，取其value值，就先当于取得需删除记录的id
+					for (var i=0;i<$xz.length;i++){
+						param += "id="+$($xz[i]).val();
+						//如果不是最后一个元素，需要追加一个&
+						if (i<$xz.length-1){
+							param+="&";
+						}
+					}
+
+					$.ajax({
+						url:"workbench/clue/delete.do",
+						data:param,
+						type: "post",
+						dataType:"json",
+						success:function(data){
+							if (data.success){
+								//删除成功后,局部刷新下页面
+								//回到第一页，每页条数不变
+								pageList(1,$("#cluePage").bs_pagination('getOption','rowsPerPage'));
+							}else {
+								alert("删除市场活动失败");
+							}
+						}
+					})
+				}
+			}
+		})
 
 
+		//为修改按钮绑定事件，打开修改线索模态窗口
+		$("#editBtn").click(function () {
+			$("#editClueModal").modal("show");
+		})
 	});
 
 	function pageList(pageNo,pageSize) {
@@ -159,7 +200,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				var html="";
 				$.each(data.dataList,function (i,n) {
 					html += '<tr>'
-					html += '<td><input type="checkbox" name="xz" /></td>'
+					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>'
 					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/clue/detail.do?id='+n.id+'\';">'+n.fullname+n.appellation+'</a></td>'
 					html += '<td>'+n.company+'</td>'
 					html += '<td>'+n.phone+'</td>'
@@ -593,8 +634,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 40px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="addBtn"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editClueModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" id="editBtn" class="btn btn-default" ><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button"  id="deleteBtn" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 				

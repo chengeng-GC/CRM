@@ -85,6 +85,8 @@
   <url-pattern>/workbench/clue/bund.do</url-pattern>
   <url-pattern>/workbench/clue/showAcitivityListByName.do</url-pattern>
   <url-pattern>/workbench/clue/convert.do</url-pattern>
+  <url-pattern>/workbench/clue/delete.do</url-pattern>
+
  </servlet-mapping>
 
 <!-- 交易控制器-->
