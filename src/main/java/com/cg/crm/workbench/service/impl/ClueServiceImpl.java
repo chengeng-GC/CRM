@@ -268,5 +268,11 @@ public class ClueServiceImpl implements ClueService {
         return flag;
     }
 
+    @Override
+    public Clue getById(String id) {
+        Clue c=clueDao.getById(id);
+        return c;
+    }
+
 
 }

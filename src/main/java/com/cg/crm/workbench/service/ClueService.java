@@ -21,4 +21,6 @@ public interface ClueService {
     boolean convert(String clueId, Tran t, String createBy);
 
     boolean delete(String[] ids);
+
+    Clue getById(String id);
 }

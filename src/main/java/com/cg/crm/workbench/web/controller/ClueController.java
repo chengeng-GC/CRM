@@ -55,13 +55,27 @@ public class ClueController extends HttpServlet {
             convert(req,resp);
         }else if ("/workbench/clue/delete.do".equals(path)) {
             delete(req,resp);
-        }else if ("/workbench/clue/xxx.do".equals(path)) {
-            //xxx(req,resp);
+        }else if ("/workbench/clue/getUserListAndClue.do".equals(path)) {
+            getUserListAndClue(req,resp);
         }else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
         }else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
         }
+
+    }
+
+    private void getUserListAndClue(HttpServletRequest req, HttpServletResponse resp) {
+        String id=req.getParameter("id");
+        UserService userService= (UserService) ServiceFactory.getService(new UserServiceImpl());
+        List<User> ulist=userService.getUserList();
+        //需要使用两个代理时要注意顺序，不能同时开两个代理
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        Clue c=clueService.getById(id);
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("ulist",ulist);
+        map.put("c",c);
+        PrintJson.printJsonObj(resp,map);
 
     }
 
