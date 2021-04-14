@@ -21,4 +21,6 @@ public interface ClueDao {
     int deleteById(String clueId);
 
     int deleteByIds(String[] ids);
+
+    int update(Clue c);
 }

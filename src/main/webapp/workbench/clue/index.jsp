@@ -202,12 +202,52 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						$("#edit-source").val(data.c.source);
 						//处理完毕后,展现模态窗口
 						$("#editClueModal").modal("show");
+						alert(data.c.id);
+						alert($("#edit-hidden-id").val());
 					}
 				})
 			}
 		})
 
 
+//为更新按钮绑定事件，执行更新操作
+        $("#updateBtn").click(function () {
+            $.ajax({
+                url:"workbench/clue/update.do",
+                data:{
+                    "id":$("#edit-hidden-id").val(),
+                    "owner":$.trim($("#edit-owner").val()),
+                    "appellation":$.trim($("#edit-appellation").val()),
+                    "job":$.trim($("#edit-job").val()),
+                    "company":$.trim($("#edit-company").val()),
+                    "email":$.trim($("#edit-email").val()),
+                    "phone":$.trim($("#edit-phone").val()),
+                    "website":$.trim($("#edit-website").val()),
+                    "mphone":$.trim($("#edit-mphone").val()),
+                    "description":$.trim($("#edit-description").val()),
+                    "contactSummary":$.trim($("#edit-contactSummary").val()),
+                    "nextContactTime":$.trim($("#edit-nextContactTime").val()),
+                    "fullname":$.trim($("#edit-fullname").val()),
+                    "address":$.trim($("#edit-address").val()),
+                    "state":$.trim($("#edit-state").val()),
+                    "source":$.trim($("#edit-source").val())
+                },
+                type: "post",
+                dataType:"json",
+                success:function(data){
+                    if (data.success){
+                        //更新成功后,局部刷新下页面
+                        //当前页数不变，每页的条数不变
+                        pageList($("#cluePage").bs_pagination('getOption', 'currentPage'),
+                            $("#cluePage").bs_pagination('getOption', 'rowsPerPage'));
+                    }else {
+                        alert("更新线索失败");
+                    }
+                    //关闭模态窗口
+                    $("#editClueModal").modal("hide");
+                }
+            })
+        })
 
 
 
@@ -441,7 +481,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 	</div>
 	
 	<!-- 修改线索的模态窗口 -->
-<input type="hidden" id="exit-hidden-id">
 	<div class="modal fade" id="editClueModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 90%;">
 			<div class="modal-content">
@@ -453,7 +492,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal" role="form">
-					
+						<input type="hidden" id="edit-hidden-id">
 						<div class="form-group">
 							<label for="edit-clueOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
@@ -571,7 +610,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="updateBtn">更新</button>
 				</div>
 			</div>
 		</div>

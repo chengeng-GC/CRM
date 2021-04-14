@@ -87,6 +87,7 @@
   <url-pattern>/workbench/clue/convert.do</url-pattern>
   <url-pattern>/workbench/clue/delete.do</url-pattern>
   <url-pattern>/workbench/clue/getUserListAndClue.do</url-pattern>
+  <url-pattern>/workbench/clue/update.do</url-pattern>
 
  </servlet-mapping>
 

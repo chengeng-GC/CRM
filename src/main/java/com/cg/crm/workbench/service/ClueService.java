@@ -23,4 +23,6 @@ public interface ClueService {
     boolean delete(String[] ids);
 
     Clue getById(String id);
+
+    boolean update(Clue c);
 }

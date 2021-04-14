@@ -274,5 +274,15 @@ public class ClueServiceImpl implements ClueService {
         return c;
     }
 
+    @Override
+    public boolean update(Clue c) {
+        boolean flag=true;
+        int count=clueDao.update(c);
+        if (count!=1){
+            flag=false;
+        }
+        return flag;
+    }
+
 
 }
