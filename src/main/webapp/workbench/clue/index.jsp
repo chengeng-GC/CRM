@@ -118,7 +118,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			pageList(1,$("#cluePage").bs_pagination('getOption','rowsPerPage'));
 		})
 
-//为删除按钮绑定事件,执行市场活动删除操作
+//为删除按钮绑定事件,执行线索删除操作
 		$("#deleteBtn").click(function () {
 			//找到复选框中所有√的jquery对象
 			var $xz= $("input[name=xz]:checked");
@@ -148,7 +148,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 								//回到第一页，每页条数不变
 								pageList(1,$("#cluePage").bs_pagination('getOption','rowsPerPage'));
 							}else {
-								alert("删除市场活动失败");
+								alert("删除线索失败");
 							}
 						}
 					})
@@ -202,8 +202,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						$("#edit-source").val(data.c.source);
 						//处理完毕后,展现模态窗口
 						$("#editClueModal").modal("show");
-						alert(data.c.id);
-						alert($("#edit-hidden-id").val());
 					}
 				})
 			}

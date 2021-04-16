@@ -67,7 +67,7 @@
 
 		//页面加载完毕后，展现该市场活动关联的备注信息列表
 		showRemarkList();
-
+        //为备注保存按钮添加事件，执行添加操作
         $("#saveRemarkBtn").click(function () {
             var noteContent=$.trim($("#remark").val());
             if (noteContent!=null&&noteContent!=""){

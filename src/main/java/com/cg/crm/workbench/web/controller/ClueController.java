@@ -8,10 +8,7 @@ import com.cg.crm.utils.PrintJson;
 import com.cg.crm.utils.ServiceFactory;
 import com.cg.crm.utils.UUIDUtil;
 import com.cg.crm.vo.PaginationVO;
-import com.cg.crm.workbench.domain.Activity;
-import com.cg.crm.workbench.domain.ActivityRemark;
-import com.cg.crm.workbench.domain.Clue;
-import com.cg.crm.workbench.domain.Tran;
+import com.cg.crm.workbench.domain.*;
 import com.cg.crm.workbench.service.ActivityService;
 import com.cg.crm.workbench.service.ClueService;
 import com.cg.crm.workbench.service.impl.ActivityServiceImpl;
@@ -59,6 +56,16 @@ public class ClueController extends HttpServlet {
             getUserListAndClue(req, resp);
         } else if ("/workbench/clue/update.do".equals(path)) {
             update(req, resp);
+        } else if ("/workbench/clue/showRemarkListByCid.do".equals(path)) {
+            showRemarkListByCid(req, resp);
+        } else if ("/workbench/clue/saveRemark.do".equals(path)) {
+            saveRemark(req, resp);
+        } else if ("/workbench/clue/deleteRemark.do".equals(path)) {
+            deleteRemark(req, resp);
+        } else if ("/workbench/clue/updateRemark.do".equals(path)) {
+            updateRemark(req, resp);
+        } else if ("/workbench/clue/xxx.do".equals(path)) {
+            //xxx(req,resp);
         } else if ("/workbench/clue/xxx.do".equals(path)) {
             //xxx(req,resp);
         } else if ("/workbench/clue/xxx.do".equals(path)) {
@@ -71,6 +78,63 @@ public class ClueController extends HttpServlet {
             //xxx(req,resp);
         }
 
+    }
+
+    private void updateRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入updateRemark Controller层");
+        String id = req.getParameter("id");
+        String noteContent = req.getParameter("noteContent");
+        String editBy = ((User) req.getSession().getAttribute("user")).getName();
+        String editTime = DateTimeUtil.getSysTime();
+        String editFlag = "1";
+        ClueRemark cr = new ClueRemark();
+        cr.setId(id);
+        cr.setNoteContent(noteContent);
+        cr.setEditBy(editBy);
+        cr.setEditTime(editTime);
+        cr.setEditFlag(editFlag);
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        boolean flag=clueService.updateRemark(cr);
+        PrintJson.printJsonFlag(resp,flag);
+
+    }
+
+    private void deleteRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入deleteRemark Controller层");
+        String id = req.getParameter("id");
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        boolean flag = clueService.deleteRemark(id);
+        PrintJson.printJsonFlag(resp, flag);
+    }
+
+    private void saveRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入saveRemark Controller层");
+        String id = UUIDUtil.getUUID();
+        String noteContent = req.getParameter("noteContent");
+        String createBy = ((User) req.getSession().getAttribute("user")).getName();
+        String createTime = DateTimeUtil.getSysTime();
+        String editFlag = "0";
+        String clueId = req.getParameter("clueId");
+
+        ClueRemark cr = new ClueRemark();
+        cr.setId(id);
+        cr.setNoteContent(noteContent);
+        cr.setCreateBy(createBy);
+        cr.setCreateTime(createTime);
+        cr.setEditFlag(editFlag);
+        cr.setClueId(clueId);
+
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        boolean flag = clueService.saveRemark(cr);
+        PrintJson.printJsonFlag(resp, flag);
+    }
+
+    private void showRemarkListByCid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入getRemarkListByCid Controller层");
+        String clueId = req.getParameter("clueId");
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        List<ClueRemark> crList = clueService.showRemarkListByCid(clueId);
+        PrintJson.printJsonObj(resp, crList);
     }
 
     private void update(HttpServletRequest req, HttpServletResponse resp) {
@@ -113,9 +177,9 @@ public class ClueController extends HttpServlet {
         c.setAddress(address);
 
         System.out.println(id);
-        ClueService clueService= (ClueService) ServiceFactory.getService(new ClueServiceImpl());
-        boolean flag=clueService.update(c);
-        PrintJson.printJsonFlag(resp,flag);
+        ClueService clueService = (ClueService) ServiceFactory.getService(new ClueServiceImpl());
+        boolean flag = clueService.update(c);
+        PrintJson.printJsonFlag(resp, flag);
     }
 
     private void getUserListAndClue(HttpServletRequest req, HttpServletResponse resp) {

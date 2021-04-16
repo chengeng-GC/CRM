@@ -88,8 +88,27 @@
   <url-pattern>/workbench/clue/delete.do</url-pattern>
   <url-pattern>/workbench/clue/getUserListAndClue.do</url-pattern>
   <url-pattern>/workbench/clue/update.do</url-pattern>
+  <url-pattern>/workbench/clue/showRemarkListByCid.do</url-pattern>
+  <url-pattern>/workbench/clue/saveRemark.do</url-pattern>
+  <url-pattern>/workbench/clue/deleteRemark.do</url-pattern>
+  <url-pattern>/workbench/clue/updateRemark.do</url-pattern>
 
  </servlet-mapping>
+
+
+
+ <!-- 客户控制器-->
+ <servlet>
+  <servlet-name>CustomerController</servlet-name>
+  <servlet-class>com.cg.crm.workbench.web.controller.CustomerController</servlet-class>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>CustomerController</servlet-name>
+  <url-pattern>/workbench/customer/pageList.do</url-pattern>
+
+ </servlet-mapping>
+
+
 
 <!-- 交易控制器-->
  <servlet>
@@ -105,9 +124,6 @@
   <url-pattern>/workbench/transaction/showHistoryListByTranId.do</url-pattern>
   <url-pattern>/workbench/transaction/changeState.do</url-pattern>
   <url-pattern>/workbench/transaction/getCharts.do</url-pattern>
-
-
-
  </servlet-mapping>
 
  </web-app>

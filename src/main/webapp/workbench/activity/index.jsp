@@ -34,7 +34,8 @@
 			$("#hidden-startDate").val($.trim($("#search-startDate").val()));
 			$("#hidden-endDate").val($.trim($("#search-endDate").val()));
 
-			pageList(1,2);
+			//应该回到第一页，维持每页展现的记录数
+			pageList(1,$("#activityPage").bs_pagination('getOption','rowsPerPage'));
 		})
 
 
@@ -276,7 +277,7 @@
 				var html="";
 
 				$.each(data.dataList,function (i,n) {
-					html += '<tr class="active">';
+					html += '<tr >';
 					html += '<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
 					html += '<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/activity/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
 					html += '<td>'+n.owner+'</td>';

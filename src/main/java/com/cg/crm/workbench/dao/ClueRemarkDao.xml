@@ -4,6 +4,37 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.ClueRemarkDao">
+    <update id="update">
+        update tbl_clue_remark set
+            noteContent=#{noteContent},
+            editBy=#{editBy},
+            editTime=#{editTime},
+            editFlag=#{editFlag}
+        where id=#{id}
+    </update>
+    <delete id="deleteById">
+        delete from tbl_clue_remark where id=#{id}
+    </delete>
+    <insert id="insert">
+        insert into tbl_clue_remark (
+            id,
+            noteContent,
+            createBy,
+            createTime,
+            editFlag,
+            clueId
+        )values (
+            #{id},
+            #{noteContent},
+            #{createBy},
+            #{createTime},
+            #{editFlag},
+            #{clueId}
+        )
+    </insert>
+    <select id="showByClueId" resultType="ClueRemark">
+         select * from tbl_clue_remark where clueId=#{clueId} order by createTime desc
+    </select>
 	<select id="getByClueId" resultType="ClueRemark">
         select * from tbl_clue_remark where clueId=#{clueId}
     </select>

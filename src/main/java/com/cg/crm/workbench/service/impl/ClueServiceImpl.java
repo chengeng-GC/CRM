@@ -284,5 +284,45 @@ public class ClueServiceImpl implements ClueService {
         return flag;
     }
 
+    @Override
+    public List<ClueRemark> showRemarkListByCid(String clueId) {
+        System.out.println("进入getRemarkListByCid service层");
+        List<ClueRemark> crList=clueRemarkDao.showByClueId(clueId);
+        return crList;
+    }
+
+    @Override
+    public boolean saveRemark(ClueRemark cr) {
+        System.out.println("进入saveRemark service层");
+        boolean flag=true;
+        int count=clueRemarkDao.insert(cr);
+        if (count!=1){
+            flag=false;
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean deleteRemark(String id) {
+        System.out.println("进入deleteRemark service层");
+        boolean flag=true;
+        int count=clueRemarkDao.deleteById(id);
+        if (count!=1){
+            flag=false;
+        }
+        return flag;
+    }
+
+    @Override
+    public boolean updateRemark(ClueRemark cr) {
+        System.out.println("进入updateRemark service层");
+        boolean flag=true;
+        int count=clueRemarkDao.update(cr);
+        if (count!=1){
+            flag=false;
+        }
+        return flag;
+    }
+
 
 }

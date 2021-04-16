@@ -4,6 +4,58 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.CustomerDao">
+    <select id="countPageList" resultType="int">
+        select count(*) from tbl_customer
+        <where>
+            <if test="name!=null and name!=''">
+                name like '%'#{name}'%'
+            </if>
+            <if test="owner!=null and owner!=''">
+                and owner like '%'#{owner}'%'
+            </if>
+            <if test="phone!=null and phone!=''">
+                and phone like '%'#{phone}'%'
+            </if>
+            <if test="website!=null and website!=''">
+                and website like '%'#{website}'%'
+            </if>
+        </where>
+    </select>
+    <select id="pageList" resultType="Customer">
+        select
+        cus.id,
+        u.name as owner,
+        cus.name,
+        cus.website,
+        cus.phone,
+        cus.createBy,
+        cus.createTime,
+        cus.editBy,
+        cus.editTime,
+        cus.contactSummary,
+        cus.nextContactTime,
+        cus.description,
+        cus.address
+        from tbl_customer cus join tbl_user u
+        on cus.owner=u.id
+        <where>
+            <if test="name!=null and name!=''">
+                name like '%'#{name}'%'
+            </if>
+            <if test="owner!=null and owner!=''">
+                and owner like '%'#{owner}'%'
+            </if>
+            <if test="phone!=null and phone!=''">
+                and phone like '%'#{phone}'%'
+            </if>
+            <if test="website!=null and website!=''">
+                and website like '%'#{website}'%'
+            </if>
+        </where>
+        order by createTime desc
+        limit #{skipPage},#{pageSize}
+    </select>
+
     <select id="getCustomerName" resultType="String">
         select name from tbl_customer where
         name like '%' #{name} '%'
