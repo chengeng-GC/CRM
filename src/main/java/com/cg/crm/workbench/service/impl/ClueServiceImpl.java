@@ -40,6 +40,8 @@ public class ClueServiceImpl implements ClueService {
 
     @Override
     public PaginationVO<Clue> pageList(Map<String, Object> map) {
+
+
         PaginationVO vo = new PaginationVO();
         //取得查询的总条数
         int total = clueDao.getCountByCondition(map);

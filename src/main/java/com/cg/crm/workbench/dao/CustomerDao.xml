@@ -5,54 +5,48 @@
 
 <mapper namespace="com.cg.crm.workbench.dao.CustomerDao">
     <select id="countPageList" resultType="int">
-        select count(*) from tbl_customer
+        select count(*) from tbl_customer c join tbl_user u
+        on c.owner=u.id
         <where>
             <if test="name!=null and name!=''">
-                name like '%'#{name}'%'
+                c.name like '%' #{name} '%'
             </if>
             <if test="owner!=null and owner!=''">
-                and owner like '%'#{owner}'%'
+                and u.name like '%' #{owner} '%'
             </if>
             <if test="phone!=null and phone!=''">
-                and phone like '%'#{phone}'%'
+                and c.phone like '%' #{phone} '%'
             </if>
             <if test="website!=null and website!=''">
-                and website like '%'#{website}'%'
+                and c.website like '%' #{website} '%'
             </if>
         </where>
     </select>
     <select id="pageList" resultType="Customer">
         select
-        cus.id,
+        c.id,
         u.name as owner,
-        cus.name,
-        cus.website,
-        cus.phone,
-        cus.createBy,
-        cus.createTime,
-        cus.editBy,
-        cus.editTime,
-        cus.contactSummary,
-        cus.nextContactTime,
-        cus.description,
-        cus.address
-        from tbl_customer cus join tbl_user u
-        on cus.owner=u.id
+        c.name,
+        c.website,
+        c.phone
+        from tbl_customer c
+        join tbl_user u
+        on c.owner=u.id
         <where>
             <if test="name!=null and name!=''">
-                name like '%'#{name}'%'
+                c.name like '%' #{name} '%'
             </if>
             <if test="owner!=null and owner!=''">
-                and owner like '%'#{owner}'%'
+                and u.name like '%' #{owner} '%'
             </if>
             <if test="phone!=null and phone!=''">
-                and phone like '%'#{phone}'%'
+                and c.phone like '%' #{phone} '%'
             </if>
             <if test="website!=null and website!=''">
-                and website like '%'#{website}'%'
+                and c.website like '%' #{website} '%'
             </if>
         </where>
-        order by createTime desc
+        order by c.createTime desc
         limit #{skipPage},#{pageSize}
     </select>
 

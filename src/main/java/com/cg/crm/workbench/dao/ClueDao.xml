@@ -66,28 +66,30 @@
          where c.id=#{id}
     </select>
     <select id="getCountByCondition" resultType="int">
-        select count(*) from tbl_clue
+        select count(*)  from tbl_clue c
+        join tbl_user u
+        on c.owner=u.id
         <where>
             <if test="fullname!=null and fullname!=''">
-                fullname like '%' #{fullname} '%'
+                c.fullname like '%' #{fullname} '%'
             </if>
             <if test="company!=null and company!=''">
-                and company like '%' #{company} '%'
+                and c.company like '%' #{company} '%'
             </if>
             <if test="phone!=null and phone!=''">
-                and phone like '%' #{phone} '%'
+                and c.phone like '%' #{phone} '%'
             </if>
             <if test="owner!=null and owner!=''">
-                and owner like '%' #{owner} '%'
+                and u.name like '%' #{owner} '%'
             </if>
             <if test="mphone!=null and mphone!=''">
-                and mphone like '%' #{mphone} '%'
+                and c.mphone like '%' #{mphone} '%'
             </if>
             <if test="source!=null and source!=''">
-                and source = #{source}
+                and c.source = #{source}
             </if>
             <if test="state!=null and state!=''">
-                and state =  #{state}
+                and c.state =  #{state}
             </if>
         </where>
     </select>
@@ -118,28 +120,28 @@
         on c.owner=u.id
         <where>
             <if test="fullname!=null and fullname!=''">
-                fullname like '%' #{fullname} '%'
+                c.fullname like '%' #{fullname} '%'
             </if>
             <if test="company!=null and company!=''">
-                and company like '%' #{company} '%'
+                and c.company like '%' #{company} '%'
             </if>
             <if test="phone!=null and phone!=''">
-                and phone like '%' #{phone} '%'
+                and c.phone like '%' #{phone} '%'
             </if>
             <if test="owner!=null and owner!=''">
-                and owner like '%' #{owner} '%'
+                and u.name like '%' #{owner} '%'
             </if>
             <if test="mphone!=null and mphone!=''">
-                and mphone like '%' #{mphone} '%'
+                and c.mphone like '%' #{mphone} '%'
             </if>
             <if test="source!=null and source!=''">
-               and source = #{source}
+               and c.source = #{source}
             </if>
             <if test="state!=null and state!=''">
-                and state =  #{state}
+                and c.state =  #{state}
             </if>
         </where>
-        order by createTime desc
+        order by c.createTime desc
         limit #{skipCount},#{pageSize}
     </select>
   	<insert id="save">

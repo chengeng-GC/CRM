@@ -105,6 +105,9 @@
  <servlet-mapping>
   <servlet-name>CustomerController</servlet-name>
   <url-pattern>/workbench/customer/pageList.do</url-pattern>
+  <url-pattern>/workbench/customer/getUserList.do</url-pattern>
+  <url-pattern>/workbench/customer/save.do</url-pattern>
+  <url-pattern>/workbench/customer/getUserListAndCustomer.do</url-pattern>
 
  </servlet-mapping>
 

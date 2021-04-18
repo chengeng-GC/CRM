@@ -115,6 +115,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			$("#hidden-search-mphone").val($.trim($("#search-mphone").val()));
 			$("#hidden-search-source").val($.trim($("#search-source").val()));
 			$("#hidden-search-state").val($.trim($("#search-state").val()));
+
+
+
 			pageList(1,$("#cluePage").bs_pagination('getOption','rowsPerPage'));
 		})
 
@@ -263,6 +266,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		$("#search-mphone").val($.trim($("#hidden-search-mphone").val()));
 		$("#search-source").val($.trim($("#hidden-search-source").val()));
 		$("#search-state").val($.trim($("#hidden-search-state").val()));
+
 
 		$.ajax({
 			url:"workbench/clue/pageList.do",
@@ -635,7 +639,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text" id="search-name">
+				      <input class="form-control" type="text" id="search-fullname">
 				    </div>
 				  </div>
 				  

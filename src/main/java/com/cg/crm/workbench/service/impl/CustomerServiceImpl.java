@@ -32,4 +32,15 @@ public class CustomerServiceImpl implements CustomerService {
       vo.setTotal(total);
       return vo;
    }
+
+   @Override
+   public boolean save(Customer c) {
+      System.out.println("进入save service层");
+      boolean flag=true;
+      int count=customerDao.add(c);
+      if (count!=1){
+         flag=false;
+      }
+      return flag;
+   }
 }
