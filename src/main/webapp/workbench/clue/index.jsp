@@ -183,12 +183,10 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							html +="<option value='"+n.id+"'>"+n.name+"</option>";
 						})
 						$("#edit-owner").html(html);
-						//当前用户作为下拉列表的默认选项
-
-						$("#edit-owner").val("${user.id}");
 
 						//处理单条clue
 						$("#edit-hidden-id").val(data.c.id);
+						$("#edit-owner").val(data.c.owner);
 						$("#edit-fullname").val(data.c.fullname);
 						$("#edit-appellation").val(data.c.appellation);
 						$("#edit-job").val(data.c.job);

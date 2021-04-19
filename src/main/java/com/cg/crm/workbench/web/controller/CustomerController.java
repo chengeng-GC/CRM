@@ -9,6 +9,7 @@ import com.cg.crm.utils.ServiceFactory;
 import com.cg.crm.utils.UUIDUtil;
 import com.cg.crm.vo.PaginationVO;
 import com.cg.crm.workbench.domain.Customer;
+import com.cg.crm.workbench.domain.CustomerRemark;
 import com.cg.crm.workbench.service.CustomerService;
 import com.cg.crm.workbench.service.impl.ClueServiceImpl;
 import com.cg.crm.workbench.service.impl.CustomerServiceImpl;
@@ -35,10 +36,20 @@ public class CustomerController extends HttpServlet {
             getUserList(req, resp);
         } else if ("/workbench/customer/save.do".equals(path)) {
             save(req, resp);
-        } else if ("/workbench/customer/xxx.do".equals(path)) {
-            //xxx(req, resp);
-        } else if ("/workbench/customer/xxx.do".equals(path)) {
-            //xxx(req, resp);
+        } else if ("/workbench/customer/getUserListAndCustomer.do".equals(path)) {
+            getUserListAndCustomer(req, resp);
+        } else if ("/workbench/customer/update.do".equals(path)) {
+            update(req, resp);
+        } else if ("/workbench/customer/delete.do".equals(path)) {
+            delete(req, resp);
+        } else if ("/workbench/customer/detail.do".equals(path)) {
+            detail(req, resp);
+        } else if ("/workbench/customer/showRemarkListByCid.do".equals(path)) {
+            showRemarkListByCid(req, resp);
+        } else if ("/workbench/customer/saveRemark.do".equals(path)) {
+            saveRemark(req, resp);
+        } else if ("/workbench/customer/deleteRemark.do".equals(path)) {
+            deleteRemark(req, resp);
         } else if ("/workbench/customer/xxx.do".equals(path)) {
             //xxx(req, resp);
         } else if ("/workbench/customer/xxx.do".equals(path)) {
@@ -52,6 +63,106 @@ public class CustomerController extends HttpServlet {
         } else if ("/workbench/customer/xxx.do".equals(path)) {
             //xxx(req, resp);
         }
+    }
+
+    private void deleteRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入deleteRemark Controller层");
+        String id = req.getParameter("id");
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        boolean flag=customerService.deleteRemark(id);
+        PrintJson.printJsonFlag(resp,flag);
+    }
+
+    private void saveRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入saveRemark Controller层");
+        String id = UUIDUtil.getUUID();
+        String noteContent = req.getParameter("noteContent");
+        String createBy = ((User) req.getSession().getAttribute("user")).getName();
+        String createTime = DateTimeUtil.getSysTime();
+        String editFlag = "0";
+        String customerId = req.getParameter("customerId");
+        CustomerRemark cr = new CustomerRemark();
+        cr.setId(id);
+        cr.setNoteContent(noteContent);
+        cr.setCreateBy(createBy);
+        cr.setCreateTime(createTime);
+        cr.setEditFlag(editFlag);
+        cr.setCustomerId(customerId);
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        boolean flag = customerService.saveRemark(cr);
+        PrintJson.printJsonFlag(resp, flag);
+
+    }
+
+    private void showRemarkListByCid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入showRemarkListByCid Controller层");
+        String customerId = req.getParameter("customerId");
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        List<CustomerRemark> crList = customerService.showRemarkListByCid(customerId);
+        PrintJson.printJsonObj(resp, crList);
+
+    }
+
+    private void detail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("进入detail Controller层");
+        String id = req.getParameter("id");
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        Customer c = customerService.detail(id);
+        req.setAttribute("c", c);
+        req.getRequestDispatcher("/workbench/customer/detail.jsp").forward(req, resp);
+
+    }
+
+    private void delete(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入delete Controller层");
+        String[] ids = req.getParameterValues("id");
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        boolean flag = customerService.delete(ids);
+        PrintJson.printJsonFlag(resp, flag);
+    }
+
+    private void update(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入update Controller层");
+        String id = req.getParameter("id");
+        String owner = req.getParameter("owner");
+        String name = req.getParameter("name");
+        String website = req.getParameter("website");
+        String phone = req.getParameter("phone");
+        String editBy = ((User) req.getSession().getAttribute("user")).getName();
+        String editTime = DateTimeUtil.getSysTime();
+        String contactSummary = req.getParameter("contactSummary");
+        String nextContactTime = req.getParameter("nextContactTime");
+        String description = req.getParameter("description");
+        String address = req.getParameter("address");
+        Customer c = new Customer();
+        c.setId(id);
+        c.setOwner(owner);
+        c.setName(name);
+        c.setWebsite(website);
+        c.setPhone(phone);
+        c.setEditBy(editBy);
+        c.setEditTime(editTime);
+        c.setContactSummary(contactSummary);
+        c.setNextContactTime(nextContactTime);
+        c.setDescription(description);
+        c.setAddress(address);
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        boolean flag = customerService.update(c);
+        PrintJson.printJsonFlag(resp, flag);
+
+    }
+
+    private void getUserListAndCustomer(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入getUserListAndCustomer Controller层");
+        String id = req.getParameter("id");
+        UserService userService = (UserService) ServiceFactory.getService(new UserServiceImpl());
+        List<User> uList = userService.getUserList();
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        Customer c = customerService.getUserListAndCustomer(id);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("uList", uList);
+        map.put("c", c);
+        PrintJson.printJsonObj(resp, map);
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) {
@@ -80,8 +191,8 @@ public class CustomerController extends HttpServlet {
         c.setDescription(description);
         c.setAddress(address);
         CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
-        boolean flag=customerService.save(c);
-        PrintJson.printJsonFlag(resp,flag);
+        boolean flag = customerService.save(c);
+        PrintJson.printJsonFlag(resp, flag);
 
 
     }

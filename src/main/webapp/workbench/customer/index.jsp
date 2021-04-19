@@ -29,6 +29,16 @@
                 e.stopPropagation();
             });
 
+            //时间（日历）选择控件
+            $(".time").datetimepicker({
+                minView: "month",
+                language:  'zh-CN',
+                format: 'yyyy-mm-dd',
+                autoclose: true,
+                todayBtn: true,
+                pickerPosition: "bottom-left"
+            });
+
             //页面加载完毕，展现页面
             pageList(1, 2);
 
@@ -45,15 +55,6 @@
 
             //为创建客户按钮绑定事件，展现创建客户模态窗口
             $("#createBtn").click(function () {
-                //时间（日历）选择控件
-                $(".time").datetimepicker({
-                    minView: "month",
-                    language:  'zh-CN',
-                    format: 'yyyy-mm-dd',
-                    autoclose: true,
-                    todayBtn: true,
-                    pickerPosition: "bottom-left"
-                });
                 //走后台，取得用户信息列表，为所有者列表添加option
                 $.ajax({
                     url : "workbench/customer/getUserList.do",
@@ -131,28 +132,25 @@
                         type: "get",
                         dataType:"json",
                         success:function(data){
-                            //用户列表ulist
+                            //用户列表uList
                             //线索单条 c
                             var html="";
-                            $.each(data.ulist,function (i,n) {
+                            $.each(data.uList,function (i,n) {
                                 html +="<option value='"+n.id+"'>"+n.name+"</option>";
                             })
                             $("#edit-owner").html(html);
-                            //当前用户作为下拉列表的默认选项
 
-                            $("#edit-owner").val("${user.id}");
 
                             //处理单条customer
                             $("#hidden-edit-id").val(data.c.id);
-                            $("#edit-owner").val(data.c.owner);
                             $("#edit-name").val(data.c.name);
+                            $("#edit-owner").val(data.c.owner);
                             $("#edit-website").val(data.c.website);
                             $("#edit-phone").val(data.c.phone);
                             $("#edit-contactSummary").val(data.c.contactSummary);
                             $("#edit-nextContactTime").val(data.c.nextContactTime);
                             $("#edit-description").val(data.c.description);
                             $("#edit-address").val(data.c.address);
-
 
                             //处理完毕后,展现模态窗口
                             $("#editCustomerModal").modal("show");
@@ -161,6 +159,75 @@
                 }
             })
 
+//为更新按钮绑定事件，执行更新操作
+            $("#updateBtn").click(function () {
+                $.ajax({
+                    url:"workbench/customer/update.do",
+                    data:{
+                        "id":$.trim($("#hidden-edit-id").val()),
+                        "owner":$.trim($("#edit-owner").val()),
+                        "name":$.trim($("#edit-name").val()),
+                        "website":$.trim($("#edit-website").val()),
+                        "phone":$.trim($("#edit-phone").val()),
+                        "contactSummary":$.trim($("#edit-contactSummary").val()),
+                        "nextContactTime":$.trim($("#edit-nextContactTime").val()),
+                        "description":$.trim($("#edit-description").val()),
+                        "address":$.trim($("#edit-address").val())
+                    },
+                    type: "post",
+                    dataType:"json",
+                    success:function(data){
+                        if (data.success){
+                            //更新成功后,局部刷新下页面
+                            //当前页数不变，每页的条数不变
+                            pageList($("#customerPage").bs_pagination('getOption', 'currentPage'),
+                                $("#customerPage").bs_pagination('getOption', 'rowsPerPage'));
+                        }else {
+                            alert("更新线索失败");
+                        }
+                        //关闭模态窗口
+                        $("#editCustomerModal").modal("hide");
+                    }
+                })
+            })
+
+            //为删除按钮绑定事件,执行线索删除操作
+            $("#deleteBtn").click(function () {
+                //找到复选框中所有√的jquery对象
+                var $xz= $("input[name=xz]:checked");
+                if ($xz.length==0){
+                    alert("请选择需要删除的记录");
+                }else {
+                    //给用户一个提示，避免误删
+                    if (confirm("确定删除所选中记录吗？")){
+                        var param="";
+                        //将$xz中的每一个dom对象遍历出来，取其value值，就先当于取得需删除记录的id
+                        for (var i=0;i<$xz.length;i++){
+                            param += "id="+$($xz[i]).val();
+                            //如果不是最后一个元素，需要追加一个&
+                            if (i<$xz.length-1){
+                                param+="&";
+                            }
+                        }
+
+                        $.ajax({
+                            url:"workbench/customer/delete.do",
+                            data:param,
+                            type: "post",
+                            dataType:"json",
+                            success:function(data){
+                                if (data.success){
+                                    //删除成功后,局部刷新下页面
+                                    //回到第一页，每页条数不变
+                                    pageList(1,$("#customerPage").bs_pagination('getOption','rowsPerPage'));
+                                }else {
+                                    alert("删除线索失败");
+                                }
+                            }
+                        })
+                    }
+                }
+            })
 
 
         });
@@ -193,7 +260,7 @@
                     $.each(data.dataList, function (i, n) {
                         html += '<tr>';
                         html += '	<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
-                        html += '			<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/customer/detail.jsp\';">'+n.name+'</a></td>';
+                        html += '			<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/customer/detail.do?id='+n.id+'\';">'+n.name+'</a></td>';
                         html += '	<td>'+n.owner+'</td>';
                         html += '	<td>'+n.phone+'</td>';
                         html += '	<td>'+n.website+'</td>';
@@ -396,7 +463,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">更新</button>
             </div>
         </div>
     </div>

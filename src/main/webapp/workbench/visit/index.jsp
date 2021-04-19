@@ -162,7 +162,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					<tbody>
 						<tr>
 							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">拜访客户</a></td>
+							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='/workbench/visit/detail.jsp';">拜访客户</a></td>
 							<td>2017-07-09</td>
 							<td>李四先生</td>
 							<td>未启动</td>
@@ -171,7 +171,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 						</tr>
 						<tr>
 							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">拜访客户</a></td>
+							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='/workbench/visit/detail.jsp';">拜访客户</a></td>
 							<td>2017-07-09</td>
 							<td>李四先生</td>
 							<td>未启动</td>

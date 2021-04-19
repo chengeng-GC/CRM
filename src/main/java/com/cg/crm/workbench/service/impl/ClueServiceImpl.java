@@ -262,9 +262,18 @@ public class ClueServiceImpl implements ClueService {
         if (count1!=count2){
             flag=false;
         }
-        //删除市场活动
-        int count3=clueDao.deleteByIds(ids);
-        if (count3!=ids.length){
+
+        //查询出需要删除的市场活动关系的数量
+        int count3 = clueActivityRelationDao.getCountByCids(ids);
+        //删除备注，返回受到影响的条数（实际删除的数量）
+        int count4=clueActivityRelationDao.deleteByCids(ids);
+        if (count3!=count4){
+            flag=false;
+        }
+
+        //删除线索
+        int count5=clueDao.deleteByIds(ids);
+        if (count5!=ids.length){
             flag=false;
         }
         return flag;
