@@ -166,6 +166,15 @@
 
         //为修改按钮绑定事件，打开修改操作的模态窗口
         $("#editBtn").click(function () {
+			$(".time").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
+
             var $xz=$("input[name=xz]:checked");
             if ($xz.length==0){
                 alert("请选择需要修改的记录");

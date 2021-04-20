@@ -50,8 +50,8 @@ public class CustomerController extends HttpServlet {
             saveRemark(req, resp);
         } else if ("/workbench/customer/deleteRemark.do".equals(path)) {
             deleteRemark(req, resp);
-        } else if ("/workbench/customer/xxx.do".equals(path)) {
-            //xxx(req, resp);
+        } else if ("/workbench/customer/updateRemark.do".equals(path)) {
+            updateRemark(req, resp);
         } else if ("/workbench/customer/xxx.do".equals(path)) {
             //xxx(req, resp);
         } else if ("/workbench/customer/xxx.do".equals(path)) {
@@ -65,12 +65,31 @@ public class CustomerController extends HttpServlet {
         }
     }
 
+    private void updateRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入updateRemark Controller层");
+        String id = req.getParameter("id");
+        String noteContent = req.getParameter("noteContent");
+        String editBy = ((User) req.getSession().getAttribute("user")).getName();
+        String editTime =DateTimeUtil.getSysTime();
+        String editFlag ="1";
+        CustomerRemark cr=new CustomerRemark();
+        cr.setId(id);
+        cr.setNoteContent(noteContent);
+        cr.setEditBy(editBy);
+        cr.setEditTime(editTime);
+        cr.setEditFlag(editFlag);
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        boolean flag=customerService.updateRemark(cr);
+        PrintJson.printJsonFlag(resp,flag);
+
+    }
+
     private void deleteRemark(HttpServletRequest req, HttpServletResponse resp) {
         System.out.println("进入deleteRemark Controller层");
         String id = req.getParameter("id");
         CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
-        boolean flag=customerService.deleteRemark(id);
-        PrintJson.printJsonFlag(resp,flag);
+        boolean flag = customerService.deleteRemark(id);
+        PrintJson.printJsonFlag(resp, flag);
     }
 
     private void saveRemark(HttpServletRequest req, HttpServletResponse resp) {

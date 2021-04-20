@@ -154,6 +154,7 @@
                 }
             })
 
+//为更新备注按钮绑定事件，执行更新操作
             $("#updateRemarkBtn").click(function () {
                 var noteContent=$.trim($("#noteContent").val());
                 var id=$("#hidden-remarkId").val();
@@ -190,41 +191,43 @@
             $("#editBtn").click(function () {
                     var id="${c.id}";
                     $.ajax({
-                        url:"workbench/clue/getUserList.do",
+                        url:"workbench/clue/getUserListAndClue.do",
+                        data:{"id":id
+                        },
                         type: "get",
                         dataType:"json",
                         success:function(data){
                             //用户列表ulist
+                            //线索单条 c
                             var html="";
-                            $.each(data,function (i,n) {
+                            $.each(data.ulist,function (i,n) {
                                 html +="<option value='"+n.id+"'>"+n.name+"</option>";
                             })
                             $("#edit-owner").html(html);
-                            //当前用户作为下拉列表的默认选项
-                            $("#edit-owner").val("${user.id}");
 
                             //处理单条clue
-                            $("#hidden-edit-id").val("${c.id}");
-                            $("#edit-fullname").val("${c.fullname}");
-                            $("#edit-appellation").val("${c.appellation}");
-                            $("#edit-job").val("${c.job}");
-                            $("#edit-company").val("${c.company}");
-                            $("#edit-email").val("${c.email}");
-                            $("#edit-phone").val("${c.phone}");
-                            $("#edit-website").val("${c.website}");
-                            $("#edit-mphone").val("${c.mphone}");
-                            $("#edit-description").val("${c.description}");
-                            $("#edit-contactSummary").val("${c.contactSummary}");
-                            $("#edit-nextContactTime").val("${c.nextContactTime}");
-                            $("#edit-address").val("${c.address}");
-                            $("#edit-state").val("${c.state}");
-                            $("#edit-source").val("${c.source}");
+                            $("#edit-hidden-id").val(data.c.id);
+                            $("#edit-owner").val(data.c.owner);
+                            $("#edit-fullname").val(data.c.fullname);
+                            $("#edit-appellation").val(data.c.appellation);
+                            $("#edit-job").val(data.c.job);
+                            $("#edit-company").val(data.c.company);
+                            $("#edit-email").val(data.c.email);
+                            $("#edit-phone").val(data.c.phone);
+                            $("#edit-website").val(data.c.website);
+                            $("#edit-mphone").val(data.c.mphone);
+                            $("#edit-description").val(data.c.description);
+                            $("#edit-contactSummary").val(data.c.contactSummary);
+                            $("#edit-nextContactTime").val(data.c.nextContactTime);
+                            $("#edit-address").val(data.c.address);
+                            $("#edit-state").val(data.c.state);
+                            $("#edit-source").val(data.c.source);
                             //处理完毕后,展现模态窗口
                             $("#editClueModal").modal("show");
-
                         }
                     })
             })
+
 
             //为线索更新按钮绑定事件，执行更新操作
             $("#updateBtn").click(function () {
@@ -267,8 +270,7 @@
             $("#deleteBtn").click(function () {
 
                     //给用户一个提示，避免误删
-                    if (confirm("确定删除所选中记录吗？")){
-
+                    if (confirm("确定删除线索吗？")){
                         $.ajax({
                             url:"workbench/clue/delete.do",
                             data:{"id":"${c.id}"},
@@ -285,6 +287,8 @@
                         })
                     }
             })
+
+
         });
 
         function showRemarkList() {

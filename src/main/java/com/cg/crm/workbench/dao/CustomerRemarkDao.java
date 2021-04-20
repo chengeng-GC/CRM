@@ -15,4 +15,6 @@ public interface CustomerRemarkDao {
     List<CustomerRemark> showByCid(String customerId);
 
     int deleteById(String id);
+
+    int update(CustomerRemark cr);
 }

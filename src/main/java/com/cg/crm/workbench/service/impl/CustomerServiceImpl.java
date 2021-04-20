@@ -136,4 +136,16 @@ public class CustomerServiceImpl implements CustomerService {
       return flag;
 
    }
+
+   @Override
+   public boolean updateRemark(CustomerRemark cr) {
+      System.out.println("进入updateRemark service层");
+      boolean flag=true;
+      int count=customerRemarkDao.update(cr);
+      if (count!=1){
+         flag=false;
+      }
+      return flag;
+
+   }
 }

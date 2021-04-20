@@ -27,4 +27,6 @@ public interface CustomerService {
     boolean saveRemark(CustomerRemark cr);
 
     boolean deleteRemark(String id);
+
+    boolean updateRemark(CustomerRemark cr);
 }

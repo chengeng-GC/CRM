@@ -92,6 +92,130 @@
                 }
             })
 
+
+            //为更新备注按钮绑定事件，执行更新操作
+            $("#updateRemarkBtn").click(function () {
+                var noteContent=$.trim($("#noteContent").val());
+                var id=$("#hidden-remarkId").val();
+                //文本域中内容不能为空
+                if (noteContent==null ||noteContent==""){
+                    alert("内容不能为空");
+                }else if (noteContent==$("#remarkNoteContent").val()){
+                    alert("该内容无需修改");
+                } else{
+                    $.ajax({
+                        url:"workbench/customer/updateRemark.do",
+                        data:{
+                            "id":id,
+                            "noteContent":noteContent
+                        },
+                        type: "post",
+                        dataType:"json",
+                        success:function(data){
+                            //success
+                            if (data.success){
+                                //局部刷新线索备注
+                                showRemarkList();
+                                //关闭模态窗口
+                                $("#editRemarkModal").modal("hide");
+                            }else {
+                                alert("修改备注失败");
+                            }
+                        }
+                    })
+                }
+            })
+
+            //为修改按钮绑定事件，打开修改线索模态窗口
+            $("#editBtn").click(function () {
+                    var id="${c.id}";
+                    $.ajax({
+                        url:"workbench/customer/getUserListAndCustomer.do",
+                        data:{"id":id
+                        },
+                        type: "get",
+                        dataType:"json",
+                        success:function(data){
+                            //用户列表uList
+                            //线索单条 c
+                            var html="";
+                            $.each(data.uList,function (i,n) {
+                                html +="<option value='"+n.id+"'>"+n.name+"</option>";
+                            })
+                            $("#edit-owner").html(html);
+
+
+                            //处理单条customer
+                            $("#hidden-edit-id").val(data.c.id);
+                            $("#edit-name").val(data.c.name);
+                            $("#edit-owner").val(data.c.owner);
+                            $("#edit-website").val(data.c.website);
+                            $("#edit-phone").val(data.c.phone);
+                            $("#edit-contactSummary").val(data.c.contactSummary);
+                            $("#edit-nextContactTime").val(data.c.nextContactTime);
+                            $("#edit-description").val(data.c.description);
+                            $("#edit-address").val(data.c.address);
+
+                            //处理完毕后,展现模态窗口
+                            $("#editCustomerModal").modal("show");
+                        }
+                    })
+            })
+
+            //为更新客户按钮绑定事件，执行更新操作
+            $("#updateBtn").click(function () {
+                $.ajax({
+                    url:"workbench/customer/update.do",
+                    data:{
+                        "id":$.trim($("#hidden-edit-id").val()),
+                        "owner":$.trim($("#edit-owner").val()),
+                        "name":$.trim($("#edit-name").val()),
+                        "website":$.trim($("#edit-website").val()),
+                        "phone":$.trim($("#edit-phone").val()),
+                        "contactSummary":$.trim($("#edit-contactSummary").val()),
+                        "nextContactTime":$.trim($("#edit-nextContactTime").val()),
+                        "description":$.trim($("#edit-description").val()),
+                        "address":$.trim($("#edit-address").val())
+                    },
+                    type: "post",
+                    dataType:"json",
+                    success:function(data){
+                        if (data.success){
+                            //更新成功后，刷新下页面
+                            window.location.href="workbench/customer/detail.do?id=${c.id}"
+                        }else {
+                            alert("更新客户失败");
+                        }
+                        //关闭模态窗口
+                        $("#editCustomerModal").modal("hide");
+                    }
+                })
+            })
+
+            //为删除客户按钮绑定事件,执行线索删除操作
+            $("#deleteBtn").click(function () {
+
+                //给用户一个提示，避免误删
+                if (confirm("确定删除客户吗？")){
+                    $.ajax({
+                        url:"workbench/customer/delete.do",
+                        data:{"id":"${c.id}"},
+                        type: "post",
+                        dataType:"json",
+                        success:function(data){
+                            if (data.success){
+                                //删除成功后回到index页面
+                                window.location.href="workbench/customer/index.jsp";
+                            }else {
+                                alert("删除客户失败");
+                            }
+                        }
+                    })
+                }
+            })
+
+
+
         });
 
         function showRemarkList() {
@@ -112,9 +236,9 @@
                         html += '			<h5>'+n.noteContent+'</h5>';
                         html += ' 	<font color="gray">客户</font> <font color="gray">-</font> <b>${c.name}-${c.website}</b> <small style="color: gray;">'+(n.editFlag==0?n.createTime:n.editTime)+'由'+(n.editFlag==0?n.createBy:n.editBy)+'</small>';
                         html += ' 	<div style="position: relative; left: 500px; top: -30px; height: 30px; width: 100px; display: none;">';
-                        html += ' 			<a class="myHref" href="javascript:void(0);" onclick="editRemark('+n.id+')" ><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
+                        html += ' 			<a class="myHref" href="javascript:void(0);" onclick="editRemark(\''+n.id+'\')" ><span class="glyphicon glyphicon-edit" style="font-size: 20px; color: #FF0000;"></span></a>';
                         html += ' 	&nbsp;&nbsp;&nbsp;&nbsp;';
-                        html += ' <a class="myHref" href="javascript:void(0);" onclick="deleteRemark('+n.id+')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
+                        html += ' <a class="myHref" href="javascript:void(0);" onclick="deleteRemark(\''+n.id+'\')"><span class="glyphicon glyphicon-remove" style="font-size: 20px; color: #FF0000;"></span></a>';
                         html += ' 	</div>';
                         html += ' 	</div>';
                         html += ' 	</div>';
@@ -336,13 +460,13 @@
                         <div class="form-group">
                             <label for="edit-contactSummary" class="col-sm-2 control-label">联系纪要</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="edit-contactSummary">这个线索即将被转换</textarea>
+                                <textarea class="form-control" rows="3" id="create-contactSummary">这个线索即将被转换</textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="edit-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-nextContactTime" value="2017-05-01">
+                                <input type="text" class="form-control" id="create-nextContactTime" value="2017-05-01">
                             </div>
                         </div>
                     </div>
@@ -380,40 +504,36 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" role="form">
-
+                    <input type="hidden" id="hidden-edit-id">
                     <div class="form-group">
                         <label for="edit-customerOwner" class="col-sm-2 control-label">所有者<span
                                 style="font-size: 15px; color: red;">*</span></label>
                         <div class="col-sm-10" style="width: 300px;">
-                            <select class="form-control" id="edit-customerOwner">
-                                <option>zhangsan</option>
-                                <option>lisi</option>
-                                <option>wangwu</option>
+                            <select class="form-control" id="edit-owner">
                             </select>
                         </div>
                         <label for="edit-customerName" class="col-sm-2 control-label">名称<span
                                 style="font-size: 15px; color: red;">*</span></label>
                         <div class="col-sm-10" style="width: 300px;">
-                            <input type="text" class="form-control" id="edit-customerName" value="动力节点">
+                            <input type="text" class="form-control" id="edit-name" >
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="edit-website" class="col-sm-2 control-label">公司网站</label>
                         <div class="col-sm-10" style="width: 300px;">
-                            <input type="text" class="form-control" id="edit-website"
-                                   value="http://www.bjpowernode.com">
+                            <input type="text" class="form-control" id="edit-website">
                         </div>
                         <label for="edit-phone" class="col-sm-2 control-label">公司座机</label>
                         <div class="col-sm-10" style="width: 300px;">
-                            <input type="text" class="form-control" id="edit-phone" value="010-84846003">
+                            <input type="text" class="form-control" id="edit-phone" >
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="edit-describe" class="col-sm-2 control-label">描述</label>
                         <div class="col-sm-10" style="width: 81%;">
-                            <textarea class="form-control" rows="3" id="edit-describe"></textarea>
+                            <textarea class="form-control" rows="3" id="edit-description"></textarea>
                         </div>
                     </div>
 
@@ -423,13 +543,13 @@
                         <div class="form-group">
                             <label for="create-contactSummary1" class="col-sm-2 control-label">联系纪要</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="3" id="create-contactSummary1"></textarea>
+                                <textarea class="form-control" rows="3" id="edit-contactSummary"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="create-nextContactTime2" class="col-sm-2 control-label">下次联系时间</label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="create-nextContactTime2">
+                                <input type="text" class="form-control" id="edit-nextContactTime">
                             </div>
                         </div>
                     </div>
@@ -440,7 +560,7 @@
                         <div class="form-group">
                             <label for="edit-address" class="col-sm-2 control-label">详细地址</label>
                             <div class="col-sm-10" style="width: 81%;">
-                                <textarea class="form-control" rows="1" id="edit-address">北京大兴大族企业湾</textarea>
+                                <textarea class="form-control" rows="1" id="edit-address"></textarea>
                             </div>
                         </div>
                     </div>
@@ -449,7 +569,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+                <button type="button" class="btn btn-primary" id="updateBtn">更新</button>
             </div>
         </div>
     </div>
@@ -610,9 +730,9 @@
                     <td></td>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="tranBody">
                 <tr>
-                    <td><a href="transaction/detail.html" style="text-decoration: none;">动力节点-交易01</a></td>
+                    <td><a href="workbench/transaction/detail.jsp" style="text-decoration: none;">动力节点-交易01</a></td>
                     <td>5,000</td>
                     <td>谈判/复审</td>
                     <td>90</td>
@@ -626,7 +746,7 @@
         </div>
 
         <div>
-            <a href="transaction/save.html" style="text-decoration: none;"><span
+            <a href="workbench/transaction/save.jsp" style="text-decoration: none;"><span
                     class="glyphicon glyphicon-plus"></span>新建交易</a>
         </div>
     </div>
@@ -648,9 +768,9 @@
                     <td></td>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="contactsBody">
                 <tr>
-                    <td><a href="contacts/detail.jsp" style="text-decoration: none;">李四</a></td>
+                    <td><a href="workbench/contacts/detail.jsp" style="text-decoration: none;">李四</a></td>
                     <td>lisi@bjpowernode.com</td>
                     <td>13543645364</td>
                     <td><a href="javascript:void(0);" data-toggle="modal" data-target="#removeContactsModal"

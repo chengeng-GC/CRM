@@ -29,15 +29,7 @@
                 e.stopPropagation();
             });
 
-            //时间（日历）选择控件
-            $(".time").datetimepicker({
-                minView: "month",
-                language:  'zh-CN',
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayBtn: true,
-                pickerPosition: "bottom-left"
-            });
+
 
             //页面加载完毕，展现页面
             pageList(1, 2);
@@ -55,6 +47,15 @@
 
             //为创建客户按钮绑定事件，展现创建客户模态窗口
             $("#createBtn").click(function () {
+                //时间（日历）选择控件
+                $(".time").datetimepicker({
+                    minView: "month",
+                    language:  'zh-CN',
+                    format: 'yyyy-mm-dd',
+                    autoclose: true,
+                    todayBtn: true,
+                    pickerPosition: "bottom-left"
+                });
                 //走后台，取得用户信息列表，为所有者列表添加option
                 $.ajax({
                     url : "workbench/customer/getUserList.do",
@@ -118,6 +119,15 @@
 
             //为修改按钮绑定事件，打开修改线索模态窗口
             $("#editBtn").click(function () {
+                //时间（日历）选择控件
+                $(".time").datetimepicker({
+                    minView: "month",
+                    language:  'zh-CN',
+                    format: 'yyyy-mm-dd',
+                    autoclose: true,
+                    todayBtn: true,
+                    pickerPosition: "bottom-left"
+                });
                 var $xz=$("input[name=xz]:checked");
                 if ($xz.length==0){
                     alert("请选择需要修改的记录");
@@ -183,7 +193,7 @@
                             pageList($("#customerPage").bs_pagination('getOption', 'currentPage'),
                                 $("#customerPage").bs_pagination('getOption', 'rowsPerPage'));
                         }else {
-                            alert("更新线索失败");
+                            alert("更新客户失败");
                         }
                         //关闭模态窗口
                         $("#editCustomerModal").modal("hide");
@@ -209,7 +219,6 @@
                                 param+="&";
                             }
                         }
-
                         $.ajax({
                             url:"workbench/customer/delete.do",
                             data:param,
@@ -221,7 +230,7 @@
                                     //回到第一页，每页条数不变
                                     pageList(1,$("#customerPage").bs_pagination('getOption','rowsPerPage'));
                                 }else {
-                                    alert("删除线索失败");
+                                    alert("删除客户失败");
                                 }
                             }
                         })
@@ -234,6 +243,8 @@
 
 
         function pageList(pageNo, pageSize) {
+            //消除复选框的√
+            $("#qx").prop("checked",false);
 
             //查询前，将隐藏域中保存的信息取出，重新赋予到搜索框中
             $("#search-name").val($.trim($("#hidden-name").val()));

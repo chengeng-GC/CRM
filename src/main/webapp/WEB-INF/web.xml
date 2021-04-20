@@ -114,11 +114,28 @@
   <url-pattern>/workbench/customer/showRemarkListByCid.do</url-pattern>
   <url-pattern>/workbench/customer/saveRemark.do</url-pattern>
   <url-pattern>/workbench/customer/deleteRemark.do</url-pattern>
+  <url-pattern>/workbench/customer/updateRemark.do</url-pattern>
   <url-pattern>/workbench/customer/xxx.do</url-pattern>
 
  </servlet-mapping>
 
+ <!-- 联系人控制器-->
+ <servlet>
+  <servlet-name>ContactsController</servlet-name>
+  <servlet-class>com.cg.crm.workbench.web.controller.ContactsController</servlet-class>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>ContactsController</servlet-name>
+  <url-pattern>/workbench/contacts/pageList.do</url-pattern>
+  <url-pattern>/workbench/contacts/getCustomerName.do</url-pattern>
+  <url-pattern>/workbench/contacts/save.do</url-pattern>
+  <url-pattern>/workbench/contacts/delete.do</url-pattern>
+  <url-pattern>/workbench/contacts/getUserListAndContacts.do</url-pattern>
+  <url-pattern>/workbench/contacts/update.do</url-pattern>
+  <url-pattern>/workbench/contacts/getUserList.do</url-pattern>
+  <url-pattern>/workbench/contacts/xxx.do</url-pattern>
 
+ </servlet-mapping>
 
 <!-- 交易控制器-->
  <servlet>
