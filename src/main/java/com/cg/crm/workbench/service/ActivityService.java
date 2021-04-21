@@ -33,4 +33,8 @@ public interface ActivityService {
     List<Activity> getAcitivityListByNameExceptClueId(Map<String,String> map);
 
     List<Activity> getAcitivityListByName(String name);
+
+    List<Activity> showActivityListByConid(String contactsId);
+
+    List<Activity> showAcitivityListByNameExceptConid(Map<String, String> map);
 }

@@ -56,6 +56,19 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		//页面加载完毕展现联系人列表
 		pageList(1,2);
 
+		$("#search-birth").click(function () {
+			//时间（日历）选择控件
+			$(".time").datetimepicker({
+				minView: "month",
+				language:  'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
+			$("#search-birth").blur();
+
+		})
 		//为查询按钮添加绑定事件，触发pageList方法
 		$("#searchBtn").click(function () {
 			//将搜索框汇中的信息保存到隐藏域中，防止其他途径触发pageList方法用未点击查询的搜索框信息查询
@@ -286,6 +299,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 
 	function pageList(pageNo,pageSize){
+
 		//消除复选框的√
 		$("#qx").prop("checked",false);
 
@@ -300,7 +314,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			data:{
 				"pageNo":pageNo,
 				"pageSize":pageSize,
-				"fullname":$.trim($("#search-name").val()),
+				"fullname":$.trim($("#search-fullname").val()),
 				"owner":$.trim($("#search-owner").val()),
 				"customerName":$.trim($("#search-customerName").val()),
 				"source":$.trim($("#search-source").val()),
@@ -319,7 +333,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 				html += '<tr>';
 				html += '	<td><input type="checkbox" name="xz" value="'+n.id+'"/></td>';
-				html += '			<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/contacts/detail.jsp\';">'+n.fullname+n.appellation+'</a></td>';
+				html += '			<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'workbench/contacts/detail.do?id='+n.id+'\';">'+n.fullname+n.appellation+'</a></td>';
 				html += '	<td>'+n.customerId+'</td>';
 				html += '	<td>'+n.owner+'</td>';
 				html += '	<td>'+n.source+'</td>';

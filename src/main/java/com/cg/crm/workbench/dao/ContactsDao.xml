@@ -4,6 +4,33 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.ContactsDao">
+    <select id="detail" resultType="Contacts">
+        select
+        con.id,
+        u.name as owner,
+        con.source,
+        cus.name as customerId,
+        con.fullname,
+        con.appellation,
+        con.email,
+        con.mphone,
+        con.job,
+        con.birth,
+        con.createBy,
+        con.createTime,
+        con.editBy,
+        con.editTime,
+        con.description,
+        con.contactSummary,
+        con.nextContactTime,
+        con.address
+        from tbl_contacts con
+        join tbl_user u
+        on con.owner=u.id
+        left join tbl_customer cus
+        on con.customerId=cus.id
+        where con.id=#{id}
+    </select>
     <update id="update">
         update tbl_contacts set
         owner=#{owner},

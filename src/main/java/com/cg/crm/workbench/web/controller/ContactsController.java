@@ -8,10 +8,13 @@ import com.cg.crm.utils.PrintJson;
 import com.cg.crm.utils.ServiceFactory;
 import com.cg.crm.utils.UUIDUtil;
 import com.cg.crm.vo.PaginationVO;
-import com.cg.crm.workbench.domain.Contacts;
-import com.cg.crm.workbench.domain.Customer;
+import com.cg.crm.workbench.domain.*;
+import com.cg.crm.workbench.service.ActivityService;
+import com.cg.crm.workbench.service.ClueService;
 import com.cg.crm.workbench.service.ContactsService;
 import com.cg.crm.workbench.service.CustomerService;
+import com.cg.crm.workbench.service.impl.ActivityServiceImpl;
+import com.cg.crm.workbench.service.impl.ClueServiceImpl;
 import com.cg.crm.workbench.service.impl.ContactsServiceImpl;
 import com.cg.crm.workbench.service.impl.CustomerServiceImpl;
 
@@ -45,12 +48,24 @@ public class ContactsController extends HttpServlet {
             getUserListAndContacts(req, resp);
         } else if ("/workbench/contacts/update.do".equals(path)) {
             update(req, resp);
-        }  else if ("/workbench/contacts/xxx.do".equals(path)) {
-            //xxx(req, resp);
-        } else if ("/workbench/contacts/xxx.do".equals(path)) {
-            //xxx(req, resp);
-        }else if ("/workbench/contacts/xxx.do".equals(path)) {
-            //xxx(req, resp);
+        }  else if ("/workbench/contacts/detail.do".equals(path)) {
+            detail(req, resp);
+        } else if ("/workbench/contacts/showRemarkListByCid.do".equals(path)) {
+            showRemarkListByCid(req, resp);
+        }else if ("/workbench/contacts/deleteRemark.do".equals(path)) {
+            deleteRemark(req, resp);
+        } else if ("/workbench/contacts/saveRemark.do".equals(path)) {
+            saveRemark(req, resp);
+        }else if ("/workbench/contacts/updateRemark.do".equals(path)) {
+            updateRemark(req, resp);
+        } else if ("/workbench/contacts/showActivityListByConid.do".equals(path)) {
+            showActivityListByConid(req, resp);
+        }else if ("/workbench/contacts/unbund.do".equals(path)) {
+            unbund(req, resp);
+        } else if ("/workbench/contacts/showAcitivityListByNameExceptConid.do".equals(path)) {
+            showAcitivityListByNameExceptConid(req, resp);
+        }else if ("/workbench/contacts/bund.do".equals(path)) {
+            bund(req, resp);
         } else if ("/workbench/contacts/xxx.do".equals(path)) {
             //xxx(req, resp);
         }else if ("/workbench/contacts/xxx.do".equals(path)) {
@@ -58,6 +73,109 @@ public class ContactsController extends HttpServlet {
         } else if ("/workbench/contacts/xxx.do".equals(path)) {
             //xxx(req, resp);
         }
+    }
+
+    private void bund(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入bund Controller层");
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        String[] aids = req.getParameterValues("aid");
+        String contactsId = req.getParameter("contactsId");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("contactsId", contactsId);
+        map.put("aids", aids);
+        boolean flag = contactsService.bund(map);
+        PrintJson.printJsonFlag(resp, flag);
+    }
+
+    private void showAcitivityListByNameExceptConid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入showAcitivityListByNameExceptConid Controller层");
+        ActivityService activityService = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        String name = req.getParameter("name");
+        String contactsId = req.getParameter("contactsId");
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("name", name);
+        map.put("contactsId", contactsId);
+        List<Activity> aList = activityService.showAcitivityListByNameExceptConid(map);
+        PrintJson.printJsonObj(resp, aList);
+    }
+
+    private void unbund(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入unbund Controller层");
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        String id = req.getParameter("id");
+        boolean flag = contactsService.unbund(id);
+        PrintJson.printJsonFlag(resp, flag);
+    }
+
+    private void showActivityListByConid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("showActivityListByConid Controller层");
+        String contactsId=req.getParameter("contactsId");
+        ActivityService activityService = (ActivityService) ServiceFactory.getService(new ActivityServiceImpl());
+        List<Activity> alist = activityService.showActivityListByConid(contactsId);
+        PrintJson.printJsonObj(resp, alist);
+    }
+
+    private void updateRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入updateRemark Controller层");
+        String id = req.getParameter("id");
+        String noteContent = req.getParameter("noteContent");
+        String editBy = ((User) req.getSession().getAttribute("user")).getName();
+        String editTime =DateTimeUtil.getSysTime();
+        String editFlag ="1";
+        ContactsRemark cr=new ContactsRemark();
+        cr.setId(id);
+        cr.setNoteContent(noteContent);
+        cr.setEditBy(editBy);
+        cr.setEditTime(editTime);
+        cr.setEditFlag(editFlag);
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        boolean flag=contactsService.updateRemark(cr);
+        PrintJson.printJsonFlag(resp,flag);
+    }
+
+    private void saveRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入saveRemark Controller层");
+        String id = UUIDUtil.getUUID();
+        String noteContent = req.getParameter("noteContent");
+        String createBy = ((User) req.getSession().getAttribute("user")).getName();
+        String createTime = DateTimeUtil.getSysTime();
+        String editFlag = "0";
+        String contactsId = req.getParameter("contactsId");
+        ContactsRemark cr = new ContactsRemark();
+        cr.setId(id);
+        cr.setNoteContent(noteContent);
+        cr.setCreateBy(createBy);
+        cr.setCreateTime(createTime);
+        cr.setEditFlag(editFlag);
+        cr.setContactsId(contactsId);
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        boolean flag = contactsService.saveRemark(cr);
+        PrintJson.printJsonFlag(resp, flag);
+    }
+
+    private void deleteRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入deleteRemark Controller层");
+        String id=req.getParameter("id");
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        boolean flag=contactsService.deleteRemark(id);
+        PrintJson.printJsonFlag(resp,flag);
+    }
+
+    private void showRemarkListByCid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入showRemarkListByCid Controller层");
+        String contactsId=req.getParameter("contactsId");
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        List<ContactsRemark> crList=contactsService.showRemarkListByCid(contactsId);
+        PrintJson.printJsonObj(resp,crList);
+    }
+
+    private void detail(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("进入detail Controller层");
+        String id=req.getParameter("id");
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        Contacts c=contactsService.detail(id);
+        req.setAttribute("c",c);
+        req.getRequestDispatcher("/workbench/contacts/detail.jsp").forward(req,resp);
     }
 
     private void update(HttpServletRequest req, HttpServletResponse resp) {

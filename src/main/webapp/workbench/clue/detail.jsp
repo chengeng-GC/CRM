@@ -61,6 +61,7 @@
 
             showActivityList();
 
+            //给关联市场活动模态窗口搜索框绑定敲击回车事件
             $("#aname").keydown(function (event) {
 
                 if (event.keyCode == 13) {
@@ -69,7 +70,7 @@
                     return false;
                 }
             })
-
+            //给关联市场活动模态窗口搜索框绑定失去焦点事件
             $("#aname").blur(function () {
                 showModelActivityList();
             })
@@ -161,7 +162,7 @@
                 //文本域中内容不能为空
                 if (noteContent==null ||noteContent==""){
                     alert("内容不能为空");
-                }else if (noteContent==$("#remarkNoteContent").val()){
+                }else if (noteContent==$("#hidden-remarkNoteContent").val()){
                     alert("该内容无需修改");
                 } else{
                     $.ajax({
@@ -422,7 +423,6 @@
                     }
                 }
             })
-
         }
 
     </script>

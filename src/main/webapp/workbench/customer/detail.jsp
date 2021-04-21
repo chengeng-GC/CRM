@@ -100,7 +100,7 @@
                 //文本域中内容不能为空
                 if (noteContent==null ||noteContent==""){
                     alert("内容不能为空");
-                }else if (noteContent==$("#remarkNoteContent").val()){
+                }else if (noteContent==$("#hidden-remarkNoteContent").val()){
                     alert("该内容无需修改");
                 } else{
                     $.ajax({
@@ -126,7 +126,7 @@
                 }
             })
 
-            //为修改按钮绑定事件，打开修改线索模态窗口
+            //为修改按钮绑定事件，打开修改模态窗口
             $("#editBtn").click(function () {
                     var id="${c.id}";
                     $.ajax({

@@ -4,6 +4,34 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.ContactsRemarkDao">
+    <update id="update">
+         update tbl_contacts_remark set
+        noteContent=#{noteContent},
+        editBy=#{editBy},
+        editTime=#{editTime},
+        editFlag=#{editFlag}
+        where id=#{id}
+    </update>
+    <delete id="deleteById">
+        delete from tbl_contacts_remark where id=#{id}
+    </delete>
+    <select id="showOrderByCid" resultType="ContactsRemark">
+        select * from tbl_contacts_remark
+        where contactsId=#{contactsId}
+        order by createTime desc
+    </select>
+    <delete id="deleteByCids">
+        delete from tbl_contacts_remark where contactsId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}
+        </foreach>
+    </delete>
+    <select id="CountByCids" resultType="int">
+        select count(*) from tbl_contacts_remark where contactsId in
+        <foreach collection="array" item="cid" open="(" close=")" separator=",">
+            #{cid}
+        </foreach>
+    </select>
     <insert id="add">
         insert into tbl_contacts_remark(
             id,

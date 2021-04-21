@@ -18,4 +18,6 @@ public interface ContactsDao {
     Contacts showCusNameById(String id);
 
     int update(Contacts con);
+
+    Contacts detail(String id);
 }

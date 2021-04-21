@@ -133,4 +133,18 @@ private ClueActivityRelationDao clueActivityRelationDao=SqlSessionUtil.getSqlSes
         List<Activity> aList=activityDao.getAcitivityListByName(name);
         return aList;
     }
+
+    @Override
+    public List<Activity> showActivityListByConid(String contactsId) {
+        System.out.println("进入showActivityListByConid service层");
+        List<Activity> aList=activityDao.showActivityListByConid(contactsId);
+        return aList;
+    }
+
+    @Override
+    public List<Activity> showAcitivityListByNameExceptConid(Map<String, String> map) {
+        System.out.println("进入showAcitivityListByNameExceptConid service层");
+        List<Activity> aList=activityDao.showAcitivityListByNameExceptConid(map);
+        return aList;
+    }
 }
