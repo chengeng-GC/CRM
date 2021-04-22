@@ -199,6 +199,7 @@ public class ContactsServiceImpl implements ContactsService {
 
     @Override
     public boolean bund(Map<String, Object> map) {
+        System.out.println("进入bund service层");
         boolean flag = true;
         String[] aids = (String[]) map.get("aids");
         String contactsId = (String) map.get("contactsId");
@@ -214,6 +215,13 @@ public class ContactsServiceImpl implements ContactsService {
         }
 
         return flag;
+    }
+
+    @Override
+    public List<Contacts> getContactsListByName(String name) {
+        System.out.println("进入getContactsListByName service层");
+        List<Contacts> cList=contactsDao.getLikeName(name);
+        return cList;
     }
 
 

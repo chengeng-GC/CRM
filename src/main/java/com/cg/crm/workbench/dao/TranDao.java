@@ -16,4 +16,14 @@ public interface TranDao {
     int getTotal();
 
     List<Map<String, Object>> getCharts();
+
+    List<Tran> pageList(Map<String, Object> map);
+
+    int countPageList(Map<String, Object> map);
+
+    int deleteByIds(String[] ids);
+
+    Tran showCusById(String id);
+
+    int update(Tran t);
 }

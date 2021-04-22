@@ -67,7 +67,6 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				pickerPosition: "bottom-left"
 			});
 			$("#search-birth").blur();
-
 		})
 		//为查询按钮添加绑定事件，触发pageList方法
 		$("#searchBtn").click(function () {

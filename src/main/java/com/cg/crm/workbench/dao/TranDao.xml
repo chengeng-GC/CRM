@@ -4,6 +4,138 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.TranDao">
+    <update id="update">
+        update tbl_tran set
+        owner=#{owner},
+        money=#{money},
+        name=#{name},
+        expectedDate=#{expectedDate},
+        customerId=#{customerId},
+        stage=#{stage},
+        type=#{type},
+        source=#{type},
+        activityId=#{activityId},
+        contactsId=#{contactsId},
+        editBy=#{editBy},
+        editTime=#{editTime},
+        description=#{description},
+        contactSummary=#{contactSummary},
+        nextContactTime=#{nextContactTime}
+        where id=#{id}
+
+    </update>
+    <select id="showCusById" resultType="Tran">
+        select
+            t.id,
+            t.owner,
+            t.money,
+            t.name,
+            t.expectedDate,
+            cus.name as customerId,
+            t.stage,
+            t.type,
+            t.source,
+             t.activityId,
+             t.contactsId,
+            t.createBy,
+            t.createTime,
+            t.editBy,
+            t.editTime,
+            t.description,
+            t.contactSummary,
+            t.nextContactTime
+        from tbl_tran t
+        join tbl_user u
+        on t.owner=u.id
+        left join tbl_customer cus
+        on t.customerId=cus.id
+        left join tbl_activity act
+        on t.activityId=act.id
+        left join tbl_contacts con
+        on t.contactsId=con.id
+        where t.id=#{id}
+    </select>
+    <delete id="deleteByIds">
+        delete from tbl_tran where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="countPageList" resultType="int">
+        select  count(*)  from tbl_tran t
+        join tbl_user u
+        on t.owner=u.id
+        left join tbl_customer cus
+        on t.customerId=cus.id
+        left join tbl_contacts con
+        on t.contactsId=con.id
+        <where>
+            <if test="owner!=null and owner!=''">
+                u.name like '%' #{owner} '%'
+            </if>
+            <if test="contactsName!=null and contactsName!=''">
+                and con.fullname like '%' #{contactsName} '%'
+            </if>
+            <if test="customerName!=null and customerName!=''">
+                and cus.name like '%' #{customerName} '%'
+            </if>
+            <if test="name!=null and name!=''">
+                and t.name  like '%' #{name} '%'
+            </if>
+            <if test="source!=null and source!=''">
+                and t.source = #{source}
+            </if>
+            <if test="stage!=null and stage!=''">
+                and t.stage = #{stage}
+            </if>
+            <if test="type!=null and type!=''">
+                and t.type = #{type}
+            </if>
+        </where>
+    </select>
+    <select id="pageList" resultType="Tran">
+        select
+        t.id,
+        u.name as owner,
+        t.name,
+        cus.name as customerId,
+        t.stage,
+        t.type,
+        t.source,
+        con.fullname as contactsId
+        from tbl_tran t
+        join tbl_user u
+        on t.owner=u.id
+        left join tbl_customer cus
+        on t.customerId=cus.id
+        left join tbl_contacts con
+        on t.contactsId=con.id
+        <where>
+            <if test="owner!=null and owner!=''">
+                u.name like '%' #{owner} '%'
+            </if>
+            <if test="contactsName!=null and contactsName!=''">
+                and con.fullname like '%' #{contactsName} '%'
+            </if>
+            <if test="customerName!=null and customerName!=''">
+                and cus.name like '%' #{customerName} '%'
+            </if>
+            <if test="name!=null and name!=''">
+                and t.name  like '%' #{name} '%'
+            </if>
+            <if test="source!=null and source!=''">
+                and t.source = #{source}
+            </if>
+            <if test="stage!=null and stage!=''">
+                and t.stage = #{stage}
+            </if>
+            <if test="type!=null and type!=''">
+                and t.type = #{type}
+            </if>
+        </where>
+        order by t.createTime desc
+        limit #{skipPage},#{pageSize}
+    </select>
     <select id="getCharts" resultType="map">
         select count(*) as value,stage as name from tbl_tran group by stage
     </select>
@@ -37,7 +169,7 @@
         from tbl_tran t
         join tbl_user u
         on t.owner=u.id
-        join tbl_customer cus
+        left join tbl_customer cus
         on t.customerId=cus.id
         left join tbl_activity act
         on t.activityId=act.id

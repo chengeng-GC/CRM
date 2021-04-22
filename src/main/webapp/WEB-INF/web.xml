@@ -160,6 +160,14 @@
   <url-pattern>/workbench/transaction/showHistoryListByTranId.do</url-pattern>
   <url-pattern>/workbench/transaction/changeState.do</url-pattern>
   <url-pattern>/workbench/transaction/getCharts.do</url-pattern>
+  <url-pattern>/workbench/transaction/pageList.do</url-pattern>
+  <url-pattern>/workbench/transaction/delete.do</url-pattern>
+  <url-pattern>/workbench/transaction/edit.do</url-pattern>
+  <url-pattern>/workbench/transaction/showAcitivityListByName.do</url-pattern>
+  <url-pattern>/workbench/transaction/getContactsListByName.do</url-pattern>
+  <url-pattern>/workbench/transaction/update.do</url-pattern>
+  <url-pattern>/workbench/transaction/xxx.do</url-pattern>
+
  </servlet-mapping>
 
  </web-app>

@@ -25,7 +25,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <%--	自动补全插件--%>
 	<script type="text/javascript" src="jquery/bs_typeahead/bootstrap3-typeahead.min.js"></script>
 
-<script >
+<script type="text/javascript" >
 <%--    一个阶段对应一个可能性
 我们现在可以将阶段和可能性想象成是一种键值对之间的对应关系
 以阶段为key，通过选中的阶段，触发可能性value
@@ -60,23 +60,6 @@ var json={
 };
 
 	$(function(){
-        $(".time1").datetimepicker({
-            minView: "month",
-            language: 'zh-CN',
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            todayBtn: true,
-            pickerPosition: "bottom-left"
-        });
-
-        $(".time2").datetimepicker({
-            minView: "month",
-            language: 'zh-CN',
-            format: 'yyyy-mm-dd',
-            autoclose: true,
-            todayBtn: true,
-            pickerPosition: "top-left"
-        });
 
 
 
@@ -98,7 +81,31 @@ var json={
 			delay: 500
 		});
 
+		$("#create-expectedDate").click(function () {
+			//时间（日历）选择控件
+			$(".timeB").datetimepicker({
+				minView: "month",
+				language: 'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "bottom-left"
+			});
 
+			$("#create-expectedDate").blur();
+		})
+		$("#create-nextContactTime").click(function () {
+			//时间（日历）选择控件
+			$(".timeT").datetimepicker({
+				minView: "month",
+				language: 'zh-CN',
+				format: 'yyyy-mm-dd',
+				autoclose: true,
+				todayBtn: true,
+				pickerPosition: "top-left"
+			});
+			$("#create-nextContactTime").blur();
+		})
 
 		$("#create-stage").change(function () {
 			//取得选中的阶段
@@ -113,15 +120,131 @@ var json={
 			$("#create-possibility").val(possibility);
 		})
 
+		//为添加按钮绑定事件，提交表单
 		$("#addBtn").click(function () {
 			$("#tranForm").submit();
 
 		})
 
+		//给查找市场活动模态窗口搜索框绑定敲击回车事件
+		$("#aname").keydown(function (event) {
 
+			if (event.keyCode == 13) {
+				showModelActivityList();
+				//展现完后，要将模态窗口默认的回车行为（默认会刷新页面）禁用掉
+				return false;
+			}
+		})
+		//给关联市场活动模态窗口搜索框绑定失去焦点事件
+		$("#aname").blur(function () {
+			showModelActivityList();
+		})
+
+		//为市场活动radio绑定事件
+		$("#model-activityBody").on("click",$("input:radio[name=activity]"),function () {
+			if ($("input[name=activity]:checked").length!=0){
+				var id=$("input[name=activity]:checked").val();
+				var name=$("#n"+id).html();
+				var flag=$("#hidden-activityId").val();
+				if (id!=flag) {
+					$("#hidden-activityId").val(id);
+					$("#create-activityId").val(name);
+					$("#findActivity").modal("hide");
+				}
+			}
+		})
+
+		//给查找联系人模态窗口搜索框绑定敲击回车事件
+		$("#cname").keydown(function (event) {
+
+			if (event.keyCode == 13) {
+				showModelContactsList();
+				//展现完后，要将模态窗口默认的回车行为（默认会刷新页面）禁用掉
+				return false;
+			}
+		})
+		//给查找联系人模态窗口搜索框绑定失去焦点事件
+		$("#cname").blur(function () {
+			showModelContactsList();
+		})
+
+		//联系人radio绑定事件
+		$("#model-contactsBody").on("click",$("input:radio[name=contacts]"),function () {
+			if ($("input[name=contacts]:checked").length!=0){
+				var id=$("input[name=contacts]:checked").val();
+				var name=$("#n"+id).html();
+				var flag=$("#hidden-contactsId").val();
+				if (id!=flag) {
+					$("#hidden-contactsId").val(id);
+					$("#create-contactsId").val(name);
+					$("#findContacts").modal("hide");
+				}
+			}
+		})
 
 
 	});
+
+
+function showModelActivityList() {
+	var name = $.trim($("#aname").val())
+	$.ajax({
+		url: "workbench/transaction/showAcitivityListByName.do",
+		data: {
+			"name": name,
+		},
+		type: "get",
+		dataType: "json",
+		success: function (data) {
+			//aList
+			var html = "";
+			$.each(data, function (i, n) {
+			html += '<tr>';
+			html += '	<td><input type="radio" id="'+n.id+'"  name="activity" value="'+n.id+'"/></td>';
+			html += '	<td id="n'+n.id+'">'+n.name+'</td>';
+			html += '	<td>'+n.startDate+'</td>';
+			html += '	<td>'+n.endDate+'</td>';
+			html += '	<td>'+n.owner+'</td>';
+			html += '</tr>';
+			})
+			$("#model-activityBody").html(html)
+			var id= $("#hidden-activityId").val();
+			if (id!=null&&id!=""){
+				$("#"+id).attr("checked",true);
+			}
+		}
+	})
+}
+
+function showModelContactsList() {
+	var name = $.trim($("#cname").val())
+	//查询并展现市场活动列表,排除已经关联的活动
+	$.ajax({
+		url: "workbench/transaction/getContactsListByName.do",
+		data: {
+			"name": name,
+		},
+		type: "get",
+		dataType: "json",
+		success: function (data) {
+			//aList
+			var html = "";
+			$.each(data, function (i, n) {
+				html += '<tr>';
+				html += '	<td><input type="radio" id="'+n.id+'"  name="contacts" value="'+n.id+'"/></td>';
+				html += '	<td id="n'+n.id+'">'+n.fullname+'</td>';
+				html += '	<td>'+n.email+'</td>';
+				html += '	<td>'+n.mphone+'</td>';
+				html += '</tr>';
+			})
+			$("#model-contactsBody").html(html)
+			var id= $("#hidden-contactsId").val();
+			if (id!=null&&id!=""){
+				$("#"+id).attr("checked",true);
+			}
+		}
+	})
+}
 
 </script>
 
@@ -131,7 +254,7 @@ var json={
 <body>
 
 	<!-- 查找市场活动 -->	
-	<div class="modal fade" id="findMarketActivity" role="dialog">
+	<div class="modal fade" id="findActivity" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 80%;">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -144,7 +267,7 @@ var json={
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
+						    <input type="text" class="form-control" id="aname" style="width: 300px;" placeholder="请输入市场活动名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -159,21 +282,14 @@ var json={
 								<td>所有者</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>发传单</td>
-								<td>2020-10-10</td>
-								<td>2020-10-20</td>
-								<td>zhangsan</td>
-							</tr>
+						<tbody id="model-activityBody">
+<%--							<tr>--%>
+<%--								<td><input type="radio" name="activity"/></td>--%>
+<%--								<td>发传单</td>--%>
+<%--								<td>2020-10-10</td>--%>
+<%--								<td>2020-10-20</td>--%>
+<%--								<td>zhangsan</td>--%>
+<%--							</tr>--%>
 						</tbody>
 					</table>
 				</div>
@@ -195,7 +311,7 @@ var json={
 					<div class="btn-group" style="position: relative; top: 18%; left: 8px;">
 						<form class="form-inline" role="form">
 						  <div class="form-group has-feedback">
-						    <input type="text" class="form-control" style="width: 300px;" placeholder="请输入联系人名称，支持模糊查询">
+						    <input type="text" class="form-control" id="cname" style="width: 300px;" placeholder="请输入联系人名称，支持模糊查询">
 						    <span class="glyphicon glyphicon-search form-control-feedback"></span>
 						  </div>
 						</form>
@@ -209,19 +325,14 @@ var json={
 								<td>手机</td>
 							</tr>
 						</thead>
-						<tbody>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>李四</td>
-								<td>lisi@bjpowernode.com</td>
-								<td>12345678901</td>
-							</tr>
-							<tr>
-								<td><input type="radio" name="activity"/></td>
-								<td>李四</td>
-								<td>lisi@bjpowernode.com</td>
-								<td>12345678901</td>
-							</tr>
+						<tbody id="model-contactsBody">
+<%--							<tr>--%>
+<%--								<td><input type="radio" name="activity"/></td>--%>
+<%--								<td>李四</td>--%>
+<%--								<td>lisi@bjpowernode.com</td>--%>
+<%--								<td>12345678901</td>--%>
+<%--							</tr>--%>
+
 						</tbody>
 					</table>
 				</div>
@@ -261,7 +372,7 @@ var json={
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label ">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control time1" id="create-expectedClosingDate" name="expectedDate">
+				<input type="text" class="form-control timeB" id="create-expectedDate" name="expectedDate" readonly>
 			</div>
 		</div>
 		
@@ -307,18 +418,18 @@ var json={
 					</c:forEach>
 				</select>
 			</div>
-			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findMarketActivity"><span class="glyphicon glyphicon-search"></span></a></label>
+			<label for="create-activitySrc" class="col-sm-2 control-label">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findActivity"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-activitySrc" value="做项目12">
-				<input type="hidden" value="0f882093f95043caac978c537fc7e380" name="activityId">
+				<input type="text" class="form-control" id="create-activityId" readonly >
+				<input type="hidden" id="hidden-activityId" name="activityId" >
 			</div>
 		</div>
 		
 		<div class="form-group">
 			<label for="create-contactsName" class="col-sm-2 control-label">联系人名称&nbsp;&nbsp;<a href="javascript:void(0);" data-toggle="modal" data-target="#findContacts"><span class="glyphicon glyphicon-search"></span></a></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-contactsName" value="马云">
-				<input type="hidden" value="6fe7f65577b440f688d2f915b3d0175c" name="contactsId">
+				<input type="text" class="form-control" id="create-contactsId" readonly >
+				<input type="hidden" id="hidden-contactsId" name="contactsId">
 			</div>
 		</div>
 		
@@ -339,7 +450,7 @@ var json={
 		<div class="form-group">
 			<label for="create-nextContactTime" class="col-sm-2 control-label">下次联系时间</label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control time2" id="create-nextContactTime" name="nextContactTime">
+				<input type="text" class="form-control timeT" id="create-nextContactTime" name="nextContactTime" readonly>
 			</div>
 		</div>
 		

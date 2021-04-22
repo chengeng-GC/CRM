@@ -20,4 +20,8 @@ public interface ContactsDao {
     int update(Contacts con);
 
     Contacts detail(String id);
+
+    List<Contacts> getLikeName(String name);
+
+    Contacts getById(String contactsId);
 }

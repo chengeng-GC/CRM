@@ -4,6 +4,13 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.cg.crm.workbench.dao.ContactsDao">
+    <select id="getById" resultType="Contacts">
+      select * from tbl_contacts where id=#{id};
+    </select>
+    <select id="getLikeName" resultType="Contacts">
+        select * from tbl_contacts where
+        fullname like '%' #{name} '%'
+    </select>
     <select id="detail" resultType="Contacts">
         select
         con.id,

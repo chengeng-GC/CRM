@@ -32,4 +32,6 @@ public interface ContactsService {
     boolean unbund(String id);
 
     boolean bund(Map<String, Object> map);
+
+    List<Contacts> getContactsListByName(String name);
 }
