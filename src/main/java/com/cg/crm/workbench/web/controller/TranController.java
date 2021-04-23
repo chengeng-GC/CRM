@@ -10,10 +10,7 @@ import com.cg.crm.utils.ServiceFactory;
 import com.cg.crm.utils.UUIDUtil;
 import com.cg.crm.vo.PaginationVO;
 import com.cg.crm.workbench.dao.CustomerDao;
-import com.cg.crm.workbench.domain.Activity;
-import com.cg.crm.workbench.domain.Contacts;
-import com.cg.crm.workbench.domain.Tran;
-import com.cg.crm.workbench.domain.TranHistory;
+import com.cg.crm.workbench.domain.*;
 import com.cg.crm.workbench.service.ActivityService;
 import com.cg.crm.workbench.service.ContactsService;
 import com.cg.crm.workbench.service.CustomerService;
@@ -65,14 +62,14 @@ public class TranController extends HttpServlet {
             getContactsListByName(req,resp);
         } else if ("/workbench/transaction/update.do".equals(path)) {
             update(req,resp);
-        } else if ("/workbench/transaction/xxx.do".equals(path)) {
-            //xxx(req,resp);
-        } else if ("/workbench/transaction/xxx.do".equals(path)) {
-            //xxx(req,resp);
-        } else if ("/workbench/transaction/xxx.do".equals(path)) {
-            //xxx(req,resp);
-        } else if ("/workbench/transaction/xxx.do".equals(path)) {
-            //xxx(req,resp);
+        } else if ("/workbench/transaction/showRemarkListByTid.do".equals(path)) {
+            showRemarkListByTid(req,resp);
+        } else if ("/workbench/transaction/deleteRemark.do".equals(path)) {
+            deleteRemark(req,resp);
+        } else if ("/workbench/transaction/updateRemark.do".equals(path)) {
+            updateRemark(req,resp);
+        } else if ("/workbench/transaction/saveRemark.do".equals(path)) {
+            saveRemark(req,resp);
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
             //xxx(req,resp);
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
@@ -80,6 +77,61 @@ public class TranController extends HttpServlet {
         } else if ("/workbench/transaction/xxx.do".equals(path)) {
             //xxx(req,resp);
         }
+    }
+
+    private void saveRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入saveRemark Controller层");
+        String id = UUIDUtil.getUUID();
+        String noteContent = req.getParameter("noteContent");
+        String createBy = ((User) req.getSession().getAttribute("user")).getName();
+        String createTime = DateTimeUtil.getSysTime();
+        String editFlag = "0";
+        String tranId = req.getParameter("tranId");
+        TranRemark tr=new TranRemark();
+        tr.setId(id);
+        tr.setNoteContent(noteContent);
+        tr.setCreateBy(createBy);
+        tr.setCreateTime(createTime);
+        tr.setEditFlag(editFlag);
+        tr.setTranId(tranId);
+        TranService  tranService= (TranService) ServiceFactory.getService(new TranServiceImpl());
+        boolean flag = tranService.saveRemark(tr);
+        PrintJson.printJsonFlag(resp, flag);
+    }
+
+    private void updateRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入updateRemark Controller层");
+        String id = req.getParameter("id");
+        String noteContent = req.getParameter("noteContent");
+        String editBy = ((User) req.getSession().getAttribute("user")).getName();
+        String editTime =DateTimeUtil.getSysTime();
+        String editFlag ="1";
+        TranRemark tr=new TranRemark();
+        tr.setId(id);
+        tr.setNoteContent(noteContent);
+        tr.setEditBy(editBy);
+        tr.setEditTime(editTime);
+        tr.setEditFlag(editFlag);
+        TranService  tranService= (TranService) ServiceFactory.getService(new TranServiceImpl());
+        boolean flag=tranService.updateRemark(tr);
+        PrintJson.printJsonFlag(resp,flag);
+    }
+
+    private void deleteRemark(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入deleteRemark Controller层");
+        String id=req.getParameter("id");
+        TranService  tranService= (TranService) ServiceFactory.getService(new TranServiceImpl());
+        boolean flag=tranService.deleteRemark(id);
+        PrintJson.printJsonFlag(resp,flag);
+    }
+
+    private void showRemarkListByTid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入showRemarkListByTid Controller层");
+        String tranId=req.getParameter("tranId");
+        TranService  tranService= (TranService) ServiceFactory.getService(new TranServiceImpl());
+        List<TranRemark> trList=tranService.showRemarkListByTid(tranId);
+        PrintJson.printJsonObj(resp,trList);
+
     }
 
     private void update(HttpServletRequest req, HttpServletResponse resp) throws IOException {

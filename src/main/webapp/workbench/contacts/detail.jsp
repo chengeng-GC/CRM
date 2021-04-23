@@ -194,7 +194,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 //为删除按钮绑定事件,执行删除操作
 		$("#deleteBtn").click(function () {
 				//给用户一个提示，避免误删
-				if (confirm("确定删除所选中记录吗？")){
+				if (confirm("确定删除记录吗？")){
 					$.ajax({
 						url:"workbench/contacts/delete.do",
 						data:{"id":"${c.id}"},

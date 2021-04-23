@@ -3,6 +3,7 @@ package com.cg.crm.workbench.service;
 import com.cg.crm.vo.PaginationVO;
 import com.cg.crm.workbench.domain.Tran;
 import com.cg.crm.workbench.domain.TranHistory;
+import com.cg.crm.workbench.domain.TranRemark;
 
 import java.util.List;
 import java.util.Map;
@@ -26,4 +27,12 @@ public interface TranService {
     Map<String,Object> edit(String id);
 
     boolean update(Tran t, String customerName);
+
+    List<TranRemark> showRemarkListByTid(String tranId);
+
+    boolean deleteRemark(String id);
+
+    boolean updateRemark(TranRemark tr);
+
+    boolean saveRemark(TranRemark tr);
 }

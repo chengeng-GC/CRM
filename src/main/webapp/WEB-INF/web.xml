@@ -166,6 +166,10 @@
   <url-pattern>/workbench/transaction/showAcitivityListByName.do</url-pattern>
   <url-pattern>/workbench/transaction/getContactsListByName.do</url-pattern>
   <url-pattern>/workbench/transaction/update.do</url-pattern>
+  <url-pattern>/workbench/transaction/showRemarkListByTid.do</url-pattern>
+  <url-pattern>/workbench/transaction/deleteRemark.do</url-pattern>
+  <url-pattern>/workbench/transaction/updateRemark.do</url-pattern>
+  <url-pattern>/workbench/transaction/saveRemark.do</url-pattern>
   <url-pattern>/workbench/transaction/xxx.do</url-pattern>
 
  </servlet-mapping>

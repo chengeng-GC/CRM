@@ -17,7 +17,7 @@
         </foreach>
     </select>
     <select id="getListByTranId" resultType="TranHistory">
-        select * from tbl_tran_history where tranId=#{tranId}
+        select * from tbl_tran_history where tranId=#{tranId} order by createTime desc
     </select>
 	<insert id="add">
         insert into tbl_tran_history(

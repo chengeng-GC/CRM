@@ -89,8 +89,10 @@ public class TranServiceImpl implements TranService {
 
         TranHistory th=new TranHistory();
         th.setId(UUIDUtil.getUUID());
-        th.setCreateBy(t.getCreateBy());
-        th.setCreateTime(t.getCreateTime());
+        th.setStage(t.getStage());
+        th.setPossibility(t.getPossibility());
+        th.setCreateBy(t.getEditBy());
+        th.setCreateTime(DateTimeUtil.getSysTime());
         th.setExpectedDate(t.getExpectedDate());
         th.setMoney(t.getMoney());
         th.setTranId(t.getId());
@@ -203,8 +205,49 @@ public class TranServiceImpl implements TranService {
             flag=false;
         }
 
-
         return flag;
 
+    }
+
+    @Override
+    public List<TranRemark> showRemarkListByTid(String tranId) {
+        System.out.println("进入showRemarkListByTid service层");
+        List<TranRemark> trList=tranRemarkDao.showOrderByTid(tranId);
+        return trList;
+    }
+
+    @Override
+    public boolean deleteRemark(String id) {
+        System.out.println("进入deleteRemark service层");
+        boolean flag=true;
+        int count=tranRemarkDao.deleteById(id);
+        if (count!=1){
+            flag=false;
+        }
+
+        return flag;
+    }
+
+    @Override
+    public boolean updateRemark(TranRemark tr) {
+        System.out.println("进入updateRemark service层");
+        boolean flag=true;
+        int count=tranRemarkDao.update(tr);
+        if (count!=1){
+            flag=false;
+        }
+        return flag;
+
+    }
+
+    @Override
+    public boolean saveRemark(TranRemark tr) {
+        System.out.println("进入saveRemark service层");
+        boolean flag=true;
+        int count=tranRemarkDao.insert(tr);
+        if (count!=1){
+            flag=false;
+        }
+        return flag;
     }
 }

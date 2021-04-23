@@ -13,7 +13,7 @@
         customerId=#{customerId},
         stage=#{stage},
         type=#{type},
-        source=#{type},
+        source=#{source},
         activityId=#{activityId},
         contactsId=#{contactsId},
         editBy=#{editBy},
