@@ -26,4 +26,8 @@ public interface TranDao {
     Tran showCusById(String id);
 
     int update(Tran t);
+
+    List<Tran> showOrderByConid(String contactsId);
+
+    String[] getIdByConids(String[] ids);
 }

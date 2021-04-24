@@ -66,6 +66,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 		showRemarkList();
 		showActivityList();
+		showTranList();
 
 		//给关联市场活动模态窗口搜索框绑定敲击回车事件
 		$("#aname").keydown(function (event) {
@@ -298,6 +299,51 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 	});
 
+	function deleteTran(id) {
+			//给用户一个提示，避免误删
+			if (confirm("确定删除记录吗？")){
+				$.ajax({
+					url:"workbench/transaction/delete.do",
+					data:{"id":id},
+					type: "post",
+					dataType:"json",
+					success:function(data){
+						if (data.success){
+							window.location.href="workbench/contacts/detail.do?id=${c.id}";
+						}else {
+							alert("删除交易失败");
+						}
+					}
+				})
+			}
+	}
+
+	function showTranList() {
+        $.ajax({
+            url: "workbench/contacts/showTranListByCid.do",
+            data: {
+                "contactsId": "${c.id}"
+            },
+            type: "get",
+            dataType: "json",
+            success: function (data) {
+                // aList
+                var html = "";
+                $.each(data, function (i, n) {
+                   html += ' <tr>';
+                   html += ' <td><a href="workbench/transaction/detail.do?id='+n.id+'" style="text-decoration: none;">'+n.name+'</a></td>';
+                   html += ' <td>'+n.money+'</td>';
+                   html += ' <td>'+n.stage+'</td>';
+                   html += ' <td>'+n.possibility+'</td>';
+                   html += ' <td>'+n.expectedDate+'</td>';
+                   html += ' <td>'+n.type+'</td>';
+                   html += ' <td><a href="javascript:void(0);" onclick="deleteTran(\''+n.id+'\')" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>';
+                   html += ' </tr>';
+                })
+                $("#tranBody").html(html);
+            }
+        })
+    }
 
 	function showModelActivityList() {
 		var name = $.trim($("#aname").val())
@@ -802,22 +848,22 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							<td></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<td><a href="transaction/detail.html" style="text-decoration: none;">动力节点-交易01</a></td>
-							<td>5,000</td>
-							<td>谈判/复审</td>
-							<td>90</td>
-							<td>2017-02-07</td>
-							<td>新业务</td>
-							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#unbundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>
-						</tr>
+					<tbody id="tranBody">
+<%--						<tr>--%>
+<%--							<td><a href="transaction/detail.html" style="text-decoration: none;">动力节点-交易01</a></td>--%>
+<%--							<td>5,000</td>--%>
+<%--							<td>谈判/复审</td>--%>
+<%--							<td>90</td>--%>
+<%--							<td>2017-02-07</td>--%>
+<%--							<td>新业务</td>--%>
+<%--							<td><a href="javascript:void(0);" data-toggle="modal" data-target="#unbundModal" style="text-decoration: none;"><span class="glyphicon glyphicon-remove"></span>删除</a></td>--%>
+<%--						</tr>--%>
 					</tbody>
 				</table>
 			</div>
 			
 			<div>
-				<a href="transaction/save.html" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
+				<a href="workbench/transaction/save.do" style="text-decoration: none;"><span class="glyphicon glyphicon-plus"></span>新建交易</a>
 			</div>
 		</div>
 	</div>

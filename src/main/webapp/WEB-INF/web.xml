@@ -142,7 +142,8 @@
   <url-pattern>/workbench/contacts/unbund.do</url-pattern>
   <url-pattern>/workbench/contacts/showAcitivityListByNameExceptConid.do</url-pattern>
   <url-pattern>/workbench/contacts/bund.do</url-pattern>
-  <url-pattern>/workbench/contacts/xxxx.do</url-pattern>
+  <url-pattern>/workbench/contacts/showTranListByCid.do</url-pattern>
+  <url-pattern>/workbench/contacts/xxx.do</url-pattern>
 
  </servlet-mapping>
 

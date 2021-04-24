@@ -3,6 +3,7 @@ package com.cg.crm.workbench.service;
 import com.cg.crm.vo.PaginationVO;
 import com.cg.crm.workbench.domain.Contacts;
 import com.cg.crm.workbench.domain.ContactsRemark;
+import com.cg.crm.workbench.domain.Tran;
 
 import java.util.List;
 import java.util.Map;
@@ -34,4 +35,6 @@ public interface ContactsService {
     boolean bund(Map<String, Object> map);
 
     List<Contacts> getContactsListByName(String name);
+
+    List<Tran> showTranListByCid(String contactsId);
 }

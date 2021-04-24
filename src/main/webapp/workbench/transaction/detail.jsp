@@ -204,7 +204,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 							//删除成功后,返回index页面
 							window.location.href="workbench/transaction/index.jsp";
 						}else {
-							alert("删除联系人失败");
+							alert("删除交易失败");
 						}
 					}
 				})

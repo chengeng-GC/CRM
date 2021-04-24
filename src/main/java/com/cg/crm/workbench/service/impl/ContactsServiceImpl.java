@@ -1,15 +1,14 @@
 package com.cg.crm.workbench.service.impl;
 
 import com.cg.crm.utils.DateTimeUtil;
+import com.cg.crm.utils.ServiceFactory;
 import com.cg.crm.utils.SqlSessionUtil;
 import com.cg.crm.utils.UUIDUtil;
 import com.cg.crm.vo.PaginationVO;
-import com.cg.crm.workbench.dao.ContactsActivityRelationDao;
-import com.cg.crm.workbench.dao.ContactsDao;
-import com.cg.crm.workbench.dao.ContactsRemarkDao;
-import com.cg.crm.workbench.dao.CustomerDao;
+import com.cg.crm.workbench.dao.*;
 import com.cg.crm.workbench.domain.*;
 import com.cg.crm.workbench.service.ContactsService;
+import com.cg.crm.workbench.service.TranService;
 
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,9 @@ public class ContactsServiceImpl implements ContactsService {
     private ContactsRemarkDao contactsRemarkDao= SqlSessionUtil.getSqlSession().getMapper(ContactsRemarkDao.class);
     private ContactsActivityRelationDao contactsActivityRelationDao= SqlSessionUtil.getSqlSession().getMapper(ContactsActivityRelationDao.class);
     private CustomerDao customerDao= SqlSessionUtil.getSqlSession().getMapper(CustomerDao.class);
+    private TranDao tranDao= SqlSessionUtil.getSqlSession().getMapper(TranDao.class);
+    private TranHistoryDao tranHistoryDao = SqlSessionUtil.getSqlSession().getMapper(TranHistoryDao.class);
+    private TranRemarkDao tranRemarkDao = SqlSessionUtil.getSqlSession().getMapper(TranRemarkDao.class);
 
 
     @Override
@@ -78,7 +80,30 @@ public class ContactsServiceImpl implements ContactsService {
         if (count1!=count2){
             flag=false;
         }
+
+
+        //删除交易备注
+        String[] tids=tranDao.getIdByConids(ids);
+         count1=tranRemarkDao.countByTids(tids);
+         count2=tranRemarkDao.deleteByTids(tids);
+        if (count1!=count2){
+            flag=false;
+        }
+
+        //删除交易阶段历史
+        int count3=tranHistoryDao.countByTids(tids);
+        int count4=tranHistoryDao.deleteByTids(tids);
+        if (count3!=count4){
+            flag=false;
+        }
+
         //删除交易
+        int count=tranDao.deleteByIds(tids);
+        if (count!=tids.length){
+            flag=false;
+        }
+
+
 
 
         //删除市场活动关系
@@ -88,7 +113,7 @@ public class ContactsServiceImpl implements ContactsService {
             flag=false;
         }
 
-        int count=contactsDao.deleteByIds(ids);
+         count=contactsDao.deleteByIds(ids);
         if (count!=ids.length){
             flag=false;
         }
@@ -222,6 +247,13 @@ public class ContactsServiceImpl implements ContactsService {
         System.out.println("进入getContactsListByName service层");
         List<Contacts> cList=contactsDao.getLikeName(name);
         return cList;
+    }
+
+    @Override
+    public List<Tran> showTranListByCid(String contactsId) {
+        System.out.println("进入showTranListByCid service层");
+        List<Tran>  tList=tranDao.showOrderByConid(contactsId);
+        return tList;
     }
 
 

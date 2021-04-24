@@ -66,13 +66,26 @@ public class ContactsController extends HttpServlet {
             showAcitivityListByNameExceptConid(req, resp);
         }else if ("/workbench/contacts/bund.do".equals(path)) {
             bund(req, resp);
-        } else if ("/workbench/contacts/xxx.do".equals(path)) {
-            //xxx(req, resp);
+        } else if ("/workbench/contacts/showTranListByCid.do".equals(path)) {
+            showTranListByCid(req, resp);
         }else if ("/workbench/contacts/xxx.do".equals(path)) {
             //xxx(req, resp);
         } else if ("/workbench/contacts/xxx.do".equals(path)) {
             //xxx(req, resp);
         }
+    }
+
+    private void showTranListByCid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入showTranListByCid Controller层");
+        String contactsId=req.getParameter("contactsId");
+        ContactsService contactsService = (ContactsService) ServiceFactory.getService(new ContactsServiceImpl());
+        List<Tran> tList=contactsService.showTranListByCid(contactsId);
+        Map<String,String> pMap= (Map<String, String>) req.getServletContext().getAttribute("pMap");
+        for (Tran t:tList) {
+            String possibility=pMap.get(t.getStage());
+            t.setPossibility(possibility);
+        }
+        PrintJson.printJsonObj(resp,tList);
     }
 
     private void bund(HttpServletRequest req, HttpServletResponse resp) {
