@@ -5,6 +5,7 @@ import com.cg.crm.vo.PaginationVO;
 import com.cg.crm.workbench.dao.ActivityDao;
 import com.cg.crm.workbench.dao.ActivityRemarkDao;
 import com.cg.crm.workbench.dao.ClueActivityRelationDao;
+import com.cg.crm.workbench.dao.ContactsActivityRelationDao;
 import com.cg.crm.workbench.domain.Activity;
 import com.cg.crm.workbench.domain.ActivityRemark;
 import com.cg.crm.workbench.service.ActivityService;
@@ -16,6 +17,9 @@ public class ActivityServiceImpl implements ActivityService {
 private ActivityDao activityDao= SqlSessionUtil.getSqlSession().getMapper(ActivityDao.class);
 private ActivityRemarkDao activityRemarkDao=SqlSessionUtil.getSqlSession().getMapper(ActivityRemarkDao.class);
 private ClueActivityRelationDao clueActivityRelationDao=SqlSessionUtil.getSqlSession().getMapper(ClueActivityRelationDao.class);
+    private ContactsActivityRelationDao contactsActivityRelationDao= SqlSessionUtil.getSqlSession().getMapper(ContactsActivityRelationDao.class);
+
+
     public boolean save(Activity a) {
         boolean flag= true;
         int count= activityDao.save(a);
@@ -49,8 +53,20 @@ private ClueActivityRelationDao clueActivityRelationDao=SqlSessionUtil.getSqlSes
         if (count1!=count2){
             flag=false;
         }
+        //删除线索关系
+        int count3 = clueActivityRelationDao.getCountByAids(ids);
+        int count4=clueActivityRelationDao.deleteByAids(ids);
+        if (count3!=count4){
+            flag=false;
+        }
+        //删除客户关系
+        int count5=contactsActivityRelationDao.CountByAids(ids);
+        int count6=contactsActivityRelationDao.deleteByAids(ids);
+        if (count5!=count6){
+            flag=false;
+        }
         //删除市场活动
-        int count3=activityDao.delete(ids);
+        count3=activityDao.delete(ids);
         if (count3!=ids.length){
             flag=false;
         }

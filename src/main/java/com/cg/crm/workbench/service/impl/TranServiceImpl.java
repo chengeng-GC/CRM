@@ -158,8 +158,10 @@ public class TranServiceImpl implements TranService {
        Activity a=activityDao.getById(t.getActivityId());
         Map<String,Object> map=new HashMap<String, Object>();
         map.put("t",t);
-        map.put("contactsName",con.getFullname());
-        map.put("activityName",a.getName());
+
+        map.put("contactsName",((con==null)?null:con.getFullname()));
+
+        map.put("activityName",((a==null)?null:a.getName()));
         return map;
     }
 

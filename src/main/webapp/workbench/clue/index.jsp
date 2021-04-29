@@ -55,45 +55,50 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				}
 			})
 
-			//为保存按钮绑定点击事件，执行保存线索
-			$("#saveBtn").click(function () {
-				$.ajax({
-					url:"workbench/clue/saveClue.do",
-					data:{
-						"fullname":$.trim($("#create-fullname").val()),
-						"appellation":$.trim($("#create-appellation").val()),
-						"owner":$.trim($("#create-owner").val()),
-						"company":$.trim($("#create-company").val()),
-						"job":$.trim($("#create-job").val()),
-						"email":$.trim($("#create-email").val()),
-						"phone":$.trim($("#create-phone").val()),
-						"website":$.trim($("#create-website").val()),
-						"mphone":$.trim($("#create-mphone").val()),
-						"state":$.trim($("#create-state").val()),
-						"source":$.trim($("#create-source").val()),
-						"description":$.trim($("#create-description").val()),
-						"contactSummary":$.trim($("#create-contactSummary").val()),
-						"nextContactTime":$.trim($("#create-nextContactTime").val()),
-						"address":$.trim($("#create-address").val())
-					},
-					type: "post",
-					dataType:"json",
-					success:function(data){
-						//success
-						if (data.success){
-							//刷新列表
-							pageList(1,$("#cluePage").bs_pagination('getOption','rowsPerPage'));
-
-							$("#createClueModal").modal("hide");
-						}else {
-							alert("创建线索失败");
-						}
-
-					}
-				})
-			})
 		})
 
+//为保存按钮绑定点击事件，执行保存线索
+		$("#saveBtn").click(function () {
+			var name=$.trim($("#create-fullname").val());
+			if (name==null||name=="") {
+				alert("名称不能为空");
+				return ;
+			}
+			$.ajax({
+				url:"workbench/clue/saveClue.do",
+				data:{
+					"fullname":name,
+					"appellation":$.trim($("#create-appellation").val()),
+					"owner":$.trim($("#create-owner").val()),
+					"company":$.trim($("#create-company").val()),
+					"job":$.trim($("#create-job").val()),
+					"email":$.trim($("#create-email").val()),
+					"phone":$.trim($("#create-phone").val()),
+					"website":$.trim($("#create-website").val()),
+					"mphone":$.trim($("#create-mphone").val()),
+					"state":$.trim($("#create-state").val()),
+					"source":$.trim($("#create-source").val()),
+					"description":$.trim($("#create-description").val()),
+					"contactSummary":$.trim($("#create-contactSummary").val()),
+					"nextContactTime":$.trim($("#create-nextContactTime").val()),
+					"address":$.trim($("#create-address").val())
+				},
+				type: "post",
+				dataType:"json",
+				success:function(data){
+					//success
+					if (data.success){
+						//刷新列表
+						pageList(1,$("#cluePage").bs_pagination('getOption','rowsPerPage'));
+
+						$("#createClueModal").modal("hide");
+					}else {
+						alert("创建线索失败");
+					}
+
+				}
+			})
+		})
 		//为全选的复选框绑定事件，触发全选操作
 		$("#qx").click(function () {
 			$("input[name=xz]").prop("checked",this.checked);
@@ -219,6 +224,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 //为更新按钮绑定事件，执行更新操作
         $("#updateBtn").click(function () {
+			var name=$.trim($("#edit-fullname").val());
+			if (name==null||name=="") {
+				alert("名称不能为空");
+				return ;
+			}
             $.ajax({
                 url:"workbench/clue/update.do",
                 data:{
@@ -234,7 +244,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
                     "description":$.trim($("#edit-description").val()),
                     "contactSummary":$.trim($("#edit-contactSummary").val()),
                     "nextContactTime":$.trim($("#edit-nextContactTime").val()),
-                    "fullname":$.trim($("#edit-fullname").val()),
+                    "fullname":name,
                     "address":$.trim($("#edit-address").val()),
                     "state":$.trim($("#edit-state").val()),
                     "source":$.trim($("#edit-source").val())

@@ -20,4 +20,8 @@ public interface ClueActivityRelationDao {
     int getCountByCids(String[] ids);
 
     int deleteByCids(String[] ids);
+
+    int getCountByAids(String[] ids);
+
+    int deleteByAids(String[] ids);
 }

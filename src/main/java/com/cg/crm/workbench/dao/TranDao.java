@@ -30,4 +30,8 @@ public interface TranDao {
     List<Tran> showOrderByConid(String contactsId);
 
     String[] getIdByConids(String[] ids);
+
+    List<Tran> showOrderByCusid(String customerId);
+
+    String[] getIdByCusids(String[] ids);
 }

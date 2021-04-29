@@ -84,25 +84,26 @@ public class ContactsServiceImpl implements ContactsService {
 
         //删除交易备注
         String[] tids=tranDao.getIdByConids(ids);
-         count1=tranRemarkDao.countByTids(tids);
-         count2=tranRemarkDao.deleteByTids(tids);
-        if (count1!=count2){
-            flag=false;
-        }
+        if (tids.length!=0) {
+            count1 = tranRemarkDao.countByTids(tids);
+            count2 = tranRemarkDao.deleteByTids(tids);
+            if (count1 != count2) {
+                flag = false;
+            }
 
-        //删除交易阶段历史
-        int count3=tranHistoryDao.countByTids(tids);
-        int count4=tranHistoryDao.deleteByTids(tids);
-        if (count3!=count4){
-            flag=false;
-        }
+            //删除交易阶段历史
+            int count3 = tranHistoryDao.countByTids(tids);
+            int count4 = tranHistoryDao.deleteByTids(tids);
+            if (count3 != count4) {
+                flag = false;
+            }
 
-        //删除交易
-        int count=tranDao.deleteByIds(tids);
-        if (count!=tids.length){
-            flag=false;
+            //删除交易
+            int count = tranDao.deleteByIds(tids);
+            if (count != tids.length) {
+                flag = false;
+            }
         }
-
 
 
 
@@ -113,7 +114,7 @@ public class ContactsServiceImpl implements ContactsService {
             flag=false;
         }
 
-         count=contactsDao.deleteByIds(ids);
+        int count=contactsDao.deleteByIds(ids);
         if (count!=ids.length){
             flag=false;
         }

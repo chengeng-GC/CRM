@@ -114,13 +114,23 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 		//为保存按钮绑定事件，执行添加操作
 		$("#saveBtn").click(function () {
+			var name=$.trim($("#create-fullname").val());
+			if (name==null||name=="") {
+				alert("名称不能为空");
+				return ;
+			}
+			var customerName=$.trim($("#create-customerName").val());
+			if (customerName==null||customerName=="") {
+				alert("客户名称不能为空");
+				return ;
+			}
 			$.ajax({
 				url:"workbench/contacts/save.do",
 				data:{
 					"owner":$.trim($("#create-owner").val()),
 					"source":$.trim($("#create-source").val()),
-					"customerName":$.trim($("#create-customerName").val()),
-					"fullname":$.trim($("#create-fullname").val()),
+					"customerName":customerName,
+					"fullname":name,
 					"appellation":$.trim($("#create-appellation").val()),
 					"email":$.trim($("#create-email").val()),
 					"mphone":$.trim($("#create-mphone").val()),
@@ -256,6 +266,16 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 		//为更新按钮绑定事件，执行更新操作
 		$("#updateBtn").click(function () {
+			var name=$.trim($("#edit-fullname").val());
+			if (name==null||name=="") {
+				alert("名称不能为空");
+				return ;
+			}
+			var customerName=$.trim($("#edit-customerName").val());
+			if (customerName==null||customerName=="") {
+				alert("客户名称不能为空");
+				return ;
+			}
 			$.ajax({
 				url:"workbench/contacts/update.do",
 				data:{
@@ -263,7 +283,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 					"owner":$.trim($("#edit-owner").val()),
 					"source":$.trim($("#edit-source").val()),
 					"customerName":$.trim($("#edit-customerName").val()),
-					"fullname":$.trim($("#edit-fullname").val()),
+					"fullname":name,
 					"appellation":$.trim($("#edit-appellation").val()),
 					"email":$.trim($("#edit-email").val()),
 					"mphone":$.trim($("#edit-mphone").val()),

@@ -8,10 +8,14 @@ import com.cg.crm.utils.PrintJson;
 import com.cg.crm.utils.ServiceFactory;
 import com.cg.crm.utils.UUIDUtil;
 import com.cg.crm.vo.PaginationVO;
+import com.cg.crm.workbench.domain.Contacts;
 import com.cg.crm.workbench.domain.Customer;
 import com.cg.crm.workbench.domain.CustomerRemark;
+import com.cg.crm.workbench.domain.Tran;
+import com.cg.crm.workbench.service.ContactsService;
 import com.cg.crm.workbench.service.CustomerService;
 import com.cg.crm.workbench.service.impl.ClueServiceImpl;
+import com.cg.crm.workbench.service.impl.ContactsServiceImpl;
 import com.cg.crm.workbench.service.impl.CustomerServiceImpl;
 
 import javax.servlet.ServletException;
@@ -52,10 +56,10 @@ public class CustomerController extends HttpServlet {
             deleteRemark(req, resp);
         } else if ("/workbench/customer/updateRemark.do".equals(path)) {
             updateRemark(req, resp);
-        } else if ("/workbench/customer/xxx.do".equals(path)) {
-            //xxx(req, resp);
-        } else if ("/workbench/customer/xxx.do".equals(path)) {
-            //xxx(req, resp);
+        } else if ("/workbench/customer/showTranListByCid.do".equals(path)) {
+            showTranListByCid(req, resp);
+        } else if ("/workbench/customer/showContactsListByCid.do".equals(path)) {
+            showContactsListByCid(req, resp);
         } else if ("/workbench/customer/xxx.do".equals(path)) {
             //xxx(req, resp);
         } else if ("/workbench/customer/xxx.do".equals(path)) {
@@ -63,6 +67,27 @@ public class CustomerController extends HttpServlet {
         } else if ("/workbench/customer/xxx.do".equals(path)) {
             //xxx(req, resp);
         }
+    }
+
+    private void showContactsListByCid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入showContactsListByCid Controller层");
+        String customerId=req.getParameter("customerId");
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        List<Contacts> cList=customerService.showContactsListByCid(customerId);
+        PrintJson.printJsonObj(resp,cList);
+    }
+
+    private void showTranListByCid(HttpServletRequest req, HttpServletResponse resp) {
+        System.out.println("进入showTranListByCid Controller层");
+        String customerId=req.getParameter("customerId");
+        CustomerService customerService = (CustomerService) ServiceFactory.getService(new CustomerServiceImpl());
+        List<Tran> tList=customerService.showTranListByCid(customerId);
+        Map<String,String> pMap= (Map<String, String>) req.getServletContext().getAttribute("pMap");
+        for (Tran t:tList) {
+            String possibility=pMap.get(t.getStage());
+            t.setPossibility(possibility);
+        }
+        PrintJson.printJsonObj(resp,tList);
     }
 
     private void updateRemark(HttpServletRequest req, HttpServletResponse resp) {

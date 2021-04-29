@@ -232,6 +232,11 @@
 
             //为线索更新按钮绑定事件，执行更新操作
             $("#updateBtn").click(function () {
+                var name=$.trim($("#edit-fullname").val());
+                if (name==null||name=="") {
+                    alert("名称不能为空");
+                    return ;
+                }
                 $.ajax({
                     url:"workbench/clue/update.do",
                     data:{
@@ -247,7 +252,7 @@
                         "description":$.trim($("#edit-description").val()),
                         "contactSummary":$.trim($("#edit-contactSummary").val()),
                         "nextContactTime":$.trim($("#edit-nextContactTime").val()),
-                        "fullname":$.trim($("#edit-fullname").val()),
+                        "fullname":name,
                         "address":$.trim($("#edit-address").val()),
                         "state":$.trim($("#edit-state").val()),
                         "source":$.trim($("#edit-source").val())

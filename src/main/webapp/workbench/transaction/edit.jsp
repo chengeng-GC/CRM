@@ -151,6 +151,16 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 
 //为添加按钮绑定事件，提交表单
 		$("#updateBtn").click(function () {
+			var name=$.trim($("#edit-name").val());
+			if (name==null||name=="") {
+				alert("名称不能为空");
+				return ;
+			}
+			var customerName=$.trim($("#edit-customerName").val());
+			if (customerName==null||customerName=="") {
+				alert("客户名称不能为空");
+				return ;
+			}
 			$("#tranForm").submit();
 
 		})
@@ -339,7 +349,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		<div class="form-group">
 			<label for="edit-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="edit-transactionName" name="name" value="${t.name}">
+				<input type="text" class="form-control" id="edit-name" name="name" value="${t.name}">
 			</div>
 			<label for="edit-expectedClosingDate" class="col-sm-2 control-label">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">

@@ -77,11 +77,13 @@
 
 		//为保存按钮绑定事件，执行添加操作
 		$("#saveBtn").click(function () {
+			var name=$.trim($("#create-name").val());
+			if (name!=null&&name!=""){
 			$.ajax({
 				url:"workbench/activity/save.do",
 				data:{
 					"owner":$.trim($("#create-owner").val()),
-					"name":$.trim($("#create-name").val()),
+					"name":name,
 					"startDate":$.trim($("#create-startDate").val()),
 					"endDate":$.trim($("#create-endDate").val()),
 					"cost":$.trim($("#create-cost").val()),
@@ -110,6 +112,9 @@
 					}
 				}
 			})
+		}else {
+				alert("名称不能为空")
+			}
 		})
 
 		//为全选的复选框绑定事件，触发全选操作
@@ -217,32 +222,37 @@
 
 		//为更新按钮绑定事件，执行更新操作
 		$("#updateBtn").click(function () {
-			$.ajax({
-				url:"workbench/activity/update.do",
-				data:{
-					"id":$.trim($("#edit-hidden-id").val()),
-					"owner":$.trim($("#edit-owner").val()),
-					"name":$.trim($("#edit-name").val()),
-					"startDate":$.trim($("#edit-startDate").val()),
-					"endDate":$.trim($("#edit-endDate").val()),
-					"cost":$.trim($("#edit-cost").val()),
-					"description":$.trim($("#edit-description").val())
-				},
-				type: "post",
-				dataType:"json",
-				success:function(data){
-					if (data.success){
-						//更新成功后,局部刷新下页面
-						//当前页数不变，每页的条数不变
-						pageList($("#activityPage").bs_pagination('getOption', 'currentPage'),
-								$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
-					}else {
-						alert("更新市场活动失败");
+			var name=$.trim($("#edit-name").val());
+			if (name!=null&&name!="") {
+				$.ajax({
+					url: "workbench/activity/update.do",
+					data: {
+						"id": $.trim($("#edit-hidden-id").val()),
+						"owner": $.trim($("#edit-owner").val()),
+						"name": name,
+						"startDate": $.trim($("#edit-startDate").val()),
+						"endDate": $.trim($("#edit-endDate").val()),
+						"cost": $.trim($("#edit-cost").val()),
+						"description": $.trim($("#edit-description").val())
+					},
+					type: "post",
+					dataType: "json",
+					success: function (data) {
+						if (data.success) {
+							//更新成功后,局部刷新下页面
+							//当前页数不变，每页的条数不变
+							pageList($("#activityPage").bs_pagination('getOption', 'currentPage'),
+									$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+						} else {
+							alert("更新市场活动失败");
+						}
+						//关闭模态窗口
+						$("#editActivityModal").modal("hide");
 					}
-					//关闭模态窗口
-					$("#editActivityModal").modal("hide");
-				}
-			})
+				})
+			}else {
+				alert("名称不能为空")
+			}
 		})
 
 

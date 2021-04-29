@@ -24,4 +24,8 @@ public interface ContactsDao {
     List<Contacts> getLikeName(String name);
 
     Contacts getById(String contactsId);
+
+    List<Contacts> showOrderByCusid(String customerId);
+
+    String[] getIdByCusids(String[] ids);
 }

@@ -1,8 +1,10 @@
 package com.cg.crm.workbench.service;
 
 import com.cg.crm.vo.PaginationVO;
+import com.cg.crm.workbench.domain.Contacts;
 import com.cg.crm.workbench.domain.Customer;
 import com.cg.crm.workbench.domain.CustomerRemark;
+import com.cg.crm.workbench.domain.Tran;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +31,8 @@ public interface CustomerService {
     boolean deleteRemark(String id);
 
     boolean updateRemark(CustomerRemark cr);
+
+    List<Tran> showTranListByCid(String customerId);
+
+    List<Contacts> showContactsListByCid(String customerId);
 }

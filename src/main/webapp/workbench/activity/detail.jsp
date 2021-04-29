@@ -166,12 +166,17 @@
 
         //为更新按钮绑定点击事件,执行更新操作
         $("#updateBtn").click(function () {
+            var name=$.trim($("#edit-name").val());
+            if (name==null||name=="") {
+                alert("名称不能为空");
+                return ;
+            }
             $.ajax({
                 url:"workbench/activity/update.do",
                 data:{
                     "id":"${a.id}",
                     "owner":$.trim($("#edit-owner").val()),
-                    "name":$.trim($("#edit-name").val()),
+                    "name":name,
                     "startDate":$.trim($("#edit-startDate").val()),
                     "endDate":$.trim($("#edit-endDate").val()),
                     "cost":$.trim($("#edit-cost").val()),

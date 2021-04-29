@@ -11,4 +11,8 @@ public interface ContactsActivityRelationDao {
     int deleteByCids(String[] ids);
 
     int deleteById(String id);
+
+    int CountByAids(String[] ids);
+
+    int deleteByAids(String[] ids);
 }

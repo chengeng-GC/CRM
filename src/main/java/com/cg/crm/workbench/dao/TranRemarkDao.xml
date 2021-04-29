@@ -11,7 +11,6 @@
             createTime,
             editFlag,
             tranId
-
         )values (
             #{id},
             #{noteContent},
@@ -41,11 +40,12 @@
             #{tid}
         </foreach>
     </delete>
-<select id="countByTids" resultType="int">
-    select count(*) from tbl_tran_remark where tranId in
-    <foreach collection="array" item="tid" open="(" close=")" separator=",">
-        #{tid}
-    </foreach>
-</select>
+
+    <select id="countByTids" resultType="int">
+        select count(*) from tbl_tran_remark where tranId in
+        <foreach collection="array" item="tid" open="(" close=")" separator=",">
+            #{tid}
+        </foreach>
+    </select>
 
 </mapper>

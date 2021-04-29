@@ -122,6 +122,17 @@ var json={
 
 		//为添加按钮绑定事件，提交表单
 		$("#addBtn").click(function () {
+			var name=$.trim($("#create-name").val());
+			if (name==null||name=="") {
+				alert("名称不能为空");
+				return ;
+			}
+			var customerName=$.trim($("#create-customerName").val());
+			if (customerName==null||customerName=="") {
+				alert("客户名称不能为空");
+				return ;
+			}
+
 			$("#tranForm").submit();
 
 		})
@@ -368,7 +379,7 @@ function showModelContactsList() {
 		<div class="form-group">
 			<label for="create-transactionName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">
-				<input type="text" class="form-control" id="create-transactionName" name="name">
+				<input type="text" class="form-control" id="create-name" name="name">
 			</div>
 			<label for="create-expectedClosingDate" class="col-sm-2 control-label ">预计成交日期<span style="font-size: 15px; color: red;">*</span></label>
 			<div class="col-sm-10" style="width: 300px;">

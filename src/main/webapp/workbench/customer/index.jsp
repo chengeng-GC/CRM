@@ -78,11 +78,16 @@
 
             //为保存按钮绑定事件，执行添加操作
             $("#saveBtn").click(function () {
+                var name=$.trim($("#create-name").val());
+                if (name==null||name=="") {
+                    alert("名称不能为空");
+                    return ;
+                }
                 $.ajax({
                     url:"workbench/customer/save.do",
                     data:{
                         "owner":$.trim($("#create-owner").val()),
-                        "name":$.trim($("#create-name").val()),
+                        "name":name,
                         "phone":$.trim($("#create-phone").val()),
                         "website":$.trim($("#create-website").val()),
                         "contactSummary":$.trim($("#create-contactSummary").val()),
@@ -171,12 +176,17 @@
 
 //为更新按钮绑定事件，执行更新操作
             $("#updateBtn").click(function () {
+                var name=$.trim($("#edit-name").val());
+                if (name==null||name=="") {
+                    alert("名称不能为空");
+                    return ;
+                }
                 $.ajax({
                     url:"workbench/customer/update.do",
                     data:{
                         "id":$.trim($("#hidden-edit-id").val()),
                         "owner":$.trim($("#edit-owner").val()),
-                        "name":$.trim($("#edit-name").val()),
+                        "name":name,
                         "website":$.trim($("#edit-website").val()),
                         "phone":$.trim($("#edit-phone").val()),
                         "contactSummary":$.trim($("#edit-contactSummary").val()),
