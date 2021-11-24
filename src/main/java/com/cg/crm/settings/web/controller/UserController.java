@@ -3,9 +3,11 @@ package com.cg.crm.settings.web.controller;
 import com.cg.crm.settings.domain.User;
 import com.cg.crm.settings.service.UserService;
 import com.cg.crm.settings.service.impl.UserServiceImpl;
-import com.cg.crm.utils.MD5Util;
-import com.cg.crm.utils.PrintJson;
-import com.cg.crm.utils.ServiceFactory;
+import com.cg.crm.utils.*;
+import com.cg.crm.vo.PaginationVO;
+import com.cg.crm.workbench.domain.Activity;
+import com.cg.crm.workbench.service.ActivityService;
+import com.cg.crm.workbench.service.impl.ActivityServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,9 +35,82 @@ public class UserController extends HttpServlet {
         //判断执行方法
         if ("/settings/user/login.do".equals(path)){
             login(req,resp);
+        }else if ("/settings/user/pageList.do".equals(path)){
+            pageList(req,resp);
+        }else if ("/settings/user/save.do".equals(path)){
+            save(req,resp);
         }else if ("/settings/user/xxx.do".equals(path)){
             //xxx(req,resp);
         }
+    }
+
+    private void save(HttpServletRequest req, HttpServletResponse resp) {
+        //System.out.println("到达save页controller层");
+        UserService userService= (UserService) ServiceFactory.getService(new UserServiceImpl());
+        String id= UUIDUtil.getUUID();
+        String loginAct=req.getParameter("loginAct");
+        String name=req.getParameter("name");
+        String loginPwd=req.getParameter("loginPwd");
+        loginPwd= MD5Util.getMD5(loginPwd);
+        String email=req.getParameter("email");
+        String expireTime=req.getParameter("expireTime");
+        String lockState=req.getParameter("lockState");
+        String deptno=req.getParameter("deptno");
+        String allowIps=req.getParameter("allowIps");
+        String createTime= DateTimeUtil.getSysTime();
+        String createBy=((User)req.getSession().getAttribute("user")).getName();
+        User u=new User();
+        u.setId(id);
+        u.setLoginAct(loginAct);
+        u.setCreateBy(createBy);
+        u.setCreateTime(createTime);
+        u.setAllowIps(allowIps);
+        u.setDeptno(deptno);
+        u.setLockState(lockState);
+        u.setExpireTime(expireTime);
+        u.setEmail(email);
+        u.setLoginPwd(loginPwd);
+        u.setName(name);
+        boolean flag=userService.save(u);
+        PrintJson.printJsonFlag(resp,flag);
+
+
+    }
+
+    private void pageList(HttpServletRequest req, HttpServletResponse resp) {
+       // System.out.println("到达user页controller层");
+
+        UserService userService= (UserService) ServiceFactory.getService(new UserServiceImpl());
+        int pageNo= Integer.valueOf(req.getParameter("pageNo"));
+        int pageSize= Integer.valueOf(req.getParameter("pageSize"));
+        String name =req.getParameter("name");
+        String deptno=req.getParameter("deptno");
+        String lockState=req.getParameter("lockState");
+        String expireTimeF=req.getParameter("expireTimeF");
+        String expireTimeB=req.getParameter("expireTimeB");
+        //计算出略过的记录数
+        int skipCount=(pageNo-1)*pageSize;
+        if (!lockState.equals("")&&lockState!=null){
+        if (lockState.equals("锁定")){
+            lockState="0";
+        }else {
+            lockState="1";
+        }
+        }
+
+        System.out.println(name);
+
+        Map<String,Object> map=new HashMap<String, Object>();
+        map.put("name",name);
+        map.put("deptno",deptno);
+        map.put("lockState",lockState);
+        map.put("expireTimeF",expireTimeF);
+        map.put("expireTimeB",expireTimeB);
+        map.put("skipCount",skipCount);
+        map.put("pageSize",pageSize);
+        PaginationVO<User> vo= userService.pageList(map);
+        PrintJson.printJsonObj(resp,vo);
+
     }
 
     private void login(HttpServletRequest req, HttpServletResponse resp) {

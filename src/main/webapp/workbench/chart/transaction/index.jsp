@@ -27,15 +27,12 @@
 
                     // 基于准备好的dom，初始化echarts实例
                     var myChart=echarts.init(document.getElementById('main'));
-
                     // 指定图表的配置项和数据
                     var option = {
                         title: {
                             text: '交易漏斗图',
                             subtext: '统计交易阶段数量的漏斗图'
                         },
-
-
                         series: [
                             {
                                 name:'交易漏斗图',
@@ -73,17 +70,9 @@
                                     }
                                 },
                                 data: data.dataList
-                                //     [
-                                //     {value: 60, name: '访问'},
-                                //     {value: 40, name: '咨询'},
-                                //     {value: 20, name: '订单'},
-                                //     {value: 80, name: '点击'},
-                                //     {value: 100, name: '展现'}
-                                // ]
                             }
                         ]
                     };
-
                     // 使用刚指定的配置项和数据显示图表。
                     myChart.setOption(option);
                 }

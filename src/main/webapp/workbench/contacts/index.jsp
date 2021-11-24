@@ -56,7 +56,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		//页面加载完毕展现联系人列表
 		pageList(1,2);
 
-		$("#search-birth").click(function () {
+		$("#search-birth").mouseover(function () {
 			//时间（日历）选择控件
 			$(".time").datetimepicker({
 				minView: "month",

@@ -11,7 +11,92 @@
 	<select id="login" resultType="User">
         select * from tbl_user where loginAct=#{loginAct} and loginPwd=#{loginPwd}
     </select>
-	
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*)
+        from tbl_user
+        <where>
+            <if test="name!=null and name!=''">
+                name like '%' #{name} '%'
+            </if>
+            <if test="deptno!=null and deptno!=''">
+                and deptno like  '%' #{deptno} '%'
+            </if>
+            <if test="lockState!=null and lockState!=''">
+                and lockState = #{lockState}
+            </if>
+            <if test="expireTimeF!=null and expireTimeF!='' ">
+                and expireTime &gt; #{expireTimeF}
+            </if>
+            <if test="expireTimeB!=null and expireTimeB!='' ">
+                and expireTime &lt; #{expireTimeB}
+            </if>
+        </where>
+    </select>
+
+    <select id="getUserListByCondition" resultType="User">
+        select
+        id,
+        name,
+        loginAct,
+        deptno,
+        email,
+        expireTime,
+        allowIps,
+        lockState,
+        createBy,
+        createTime,
+        editBy,
+        editTime
+        from tbl_user
+        <where>
+            <if test="name!=null and name!=''">
+                name like '%' #{name} '%'
+            </if>
+            <if test="deptno!=null and deptno!=''">
+                and deptno like  '%' #{deptno} '%'
+            </if>
+            <if test="lockState!=null and lockState!=''">
+                and lockState = #{lockState}
+            </if>
+            <if test="expireTimeF!=null and expireTimeF!='' ">
+                and expireTime &gt; #{expireTimeF}
+            </if>
+            <if test="expireTimeB!=null and expireTimeB!='' ">
+                and expireTime &lt; #{expireTimeB}
+            </if>
+        </where>
+        order by createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <insert id="save">
+    insert into tbl_user(
+    id,
+    loginAct,
+    name,
+    loginPwd,
+    email,
+    expireTime,
+    lockState,
+    deptno,
+    allowIps,
+    createTime,
+    createBy
+    )values (
+    #{id},
+    #{loginAct},
+    #{name},
+    #{loginPwd},
+    #{email},
+    #{expireTime},
+    #{lockState},
+    #{deptno},
+    #{allowIps},
+    #{createTime},
+    #{createBy}
+        )
+</insert>
 </mapper>
 
 

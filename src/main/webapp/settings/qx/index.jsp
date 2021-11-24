@@ -1,10 +1,48 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" +     request.getServerPort() + request.getContextPath();
+%>
 <!DOCTYPE html>
 <html>
 <head>
+	<base href="<%=basePath%>" >
 <meta charset="UTF-8">
-<link href="../jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-<script type="text/javascript" src="../jquery/jquery-1.11.1-min.js"></script>
-<script type="text/javascript" src="../jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
+<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+	//页面加载完毕
+	$(function(){
+		
+		//导航中所有文本颜色为黑色
+		$(".liClass > a").css("color" , "black");
+		
+		//默认选中导航菜单中的第一个菜单项
+		$(".liClass:first").addClass("active");
+		
+		//第一个菜单项的文字变成白色
+		$(".liClass:first > a").css("color" , "white");
+		
+		//给所有的菜单项注册鼠标单击事件
+		$(".liClass").click(function(){
+			//移除所有菜单项的激活状态
+			$(".liClass").removeClass("active");
+			//导航中所有文本颜色为黑色
+			$(".liClass > a").css("color" , "black");
+			//当前项目被选中
+			$(this).addClass("active");
+			//当前项目颜色变成白色
+			$(this).children("a").css("color","white");
+		});
+		
+		//展示市场活动页面
+		window.open("settings/qx/user/index.jsp","workareaFrame");
+		
+	});
+	
+</script>
+
 </head>
 <body>
 
@@ -34,7 +72,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<!-- 修改密码的模态窗口 -->
 	<div class="modal fade" id="editPwdModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 70%;">
@@ -71,7 +109,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='../login.jsp';">更新</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='../../login.jsp';">更新</button>
 				</div>
 			</div>
 		</div>
@@ -92,7 +130,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='../login.jsp';">确定</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="window.location.href='../../login.jsp';">确定</button>
 				</div>
 			</div>
 		</div>
@@ -108,8 +146,8 @@
 						<span class="glyphicon glyphicon-user"></span> zhangsan <span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="../workbench/index.jsp"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
-						<li><a href="../settings/index.html"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
+						<li><a href="workbench/index.jsp"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
+						<li><a href="settings/index.jsp"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#myInformation"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#editPwdModal"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
 						<li><a href="javascript:void(0);" data-toggle="modal" data-target="#exitModal"><span class="glyphicon glyphicon-off"></span> 退出</a></li>
@@ -121,74 +159,33 @@
 	
 	<!-- 中间 -->
 	<div id="center" style="position: absolute;top: 50px; bottom: 30px; left: 0px; right: 0px;">
-		<div style="position: relative; top: 30px; width: 60%; height: 100px; left: 20%;">
-			<div class="page-header">
-			  <h3>系统设置</h3>
-			</div>
-		</div>
-		<div style="position: relative; width: 55%; height: 70%; left: 22%;">
-			<div style="position: relative; width: 33%; height: 50%;">
-				常规
-				<br><br>
-				<a href="javascript:void(0);">个人设置</a>
-			</div>
-			<div style="position: relative; width: 33%; height: 50%;">
-				安全控制
-				<br><br>
-				<!-- 
-				<a href="org/index.jsp" style="text-decoration: none; color: red;">组织机构</a>
-				 -->
-				<a href="dept/index.html">部门管理</a>
-				<br>
-				<a href="qx/index.html">权限管理</a>
-			</div>
+	
+		<!-- 导航 -->
+		<div id="navigation" style="left: 0px; width: 18%; position: relative; height: 100%; overflow:auto;">
+		
+			<ul id="no1" class="nav nav-pills nav-stacked">
+				<li class="liClass"><a href="settings/qx/user/index.jsp" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 用户维护</a></li>
+				<li class="liClass"><a href="role/index.html" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 角色维护</a></li>
+				<li class="liClass"><a href="permission/index.html" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 许可维护</a></li>
+				
+				
+			</ul>
 			
-			<div style="position: relative; width: 33%; height: 50%; left: 33%; top: -100%">
-				定制
-				<br><br>
-				<a href="javascript:void(0);">模块</a>
-				<br>
-				<a href="javascript:void(0);">模板</a>
-				<br>
-				<a href="javascript:void(0);">定制内容复制</a>
-			</div>
-			<div style="position: relative; width: 33%; height: 50%; left: 33%; top: -100%">
-				自动化
-				<br><br>
-				<a href="javascript:void(0);">工作流自动化</a>
-				<br>
-				<a href="javascript:void(0);">计划</a>
-				<br>
-				<a href="javascript:void(0);">Web表单</a>
-				<br>
-				<a href="javascript:void(0);">分配规则</a>
-				<br>
-				<a href="javascript:void(0);">服务支持升级规则</a>
-			</div>
-			
-			<div style="position: relative; width: 34%; height: 50%;  left: 66%; top: -200%">
-				扩展及API
-				<br><br>
-				<a href="javascript:void(0);">API</a>
-				<br>
-				<a href="javascript:void(0);">其它的</a>
-			</div>
-			<div style="position: relative; width: 34%; height: 50%; left: 66%; top: -200%">
-				数据管理
-				<br><br>
-				<a href="dictionary/index.html">数据字典表</a>
-				<br>
-				<a href="javascript:void(0);">导入</a>
-				<br>
-				<a href="javascript:void(0);">导出</a>
-				<br>
-				<a href="javascript:void(0);">存储</a>
-				<br>
-				<a href="javascript:void(0);">回收站</a>
-				<br>
-				<a href="javascript:void(0);">审计日志</a>
-			</div>
+			<!-- 分割线 -->
+			<div id="divider1" style="position: absolute; top : 0px; right: 0px; width: 1px; height: 100% ; background-color: #B3B3B3;"></div>
 		</div>
+		
+		<!-- 工作区 -->
+		<div id="workarea" style="position: absolute; top : 0px; left: 18%; width: 82%; height: 100%;">
+			<iframe style="border-width: 0px; width: 100%; height: 100%;" name="workareaFrame"></iframe>
+		</div>
+		
 	</div>
+	
+	<div id="divider2" style="height: 1px; width: 100%; position: absolute;bottom: 30px; background-color: #B3B3B3;"></div>
+	
+	<!-- 底部 -->
+	<div id="down" style="height: 30px; width: 100%; position: absolute;bottom: 0px;"></div>
+	
 </body>
 </html>

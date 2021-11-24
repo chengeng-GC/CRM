@@ -47,6 +47,8 @@
  <servlet-mapping>
   <servlet-name>UserController</servlet-name>
   <url-pattern>/settings/user/login.do</url-pattern>
+  <url-pattern>/settings/user/pageList.do</url-pattern>
+  <url-pattern>/settings/user/save.do</url-pattern>
  </servlet-mapping>
 <!-- 市场活动控制器-->
  <servlet>

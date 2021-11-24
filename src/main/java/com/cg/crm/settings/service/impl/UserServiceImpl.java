@@ -6,6 +6,8 @@ import com.cg.crm.settings.domain.User;
 import com.cg.crm.settings.service.UserService;
 import com.cg.crm.utils.DateTimeUtil;
 import com.cg.crm.utils.SqlSessionUtil;
+import com.cg.crm.vo.PaginationVO;
+import com.cg.crm.workbench.domain.Activity;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +58,30 @@ public class UserServiceImpl implements UserService {
     public List<User> getUserList() {
         List<User> ulist=userDao.getUserList();
         return  ulist;
+    }
+
+    @Override
+    public PaginationVO<User> pageList(Map<String, Object> map) {
+        //取得total
+        int total=userDao.getTotalByCondition(map);
+        //取得dataList
+        List<User> alist=userDao.getUserListByCondition(map);
+        //将total和dataList封装到vo中
+        PaginationVO<User> vo=new PaginationVO<User>();
+        vo.setTotal(total);
+        vo.setDataList(alist);
+        //将vo返回
+        return vo;
+    }
+
+    @Override
+    public boolean save(User u) {
+        boolean flag= true;
+        int count= userDao.save(u);
+        if (count!=1){
+            flag=false;
+        }
+        return flag;
     }
 
 
