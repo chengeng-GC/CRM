@@ -165,8 +165,8 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		
 			<ul id="no1" class="nav nav-pills nav-stacked">
 				<li class="liClass"><a href="settings/qx/user/index.jsp" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 用户维护</a></li>
-				<li class="liClass"><a href="role/index.html" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 角色维护</a></li>
-				<li class="liClass"><a href="permission/index.html" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 许可维护</a></li>
+				<li class="liClass"><a href="#" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 角色维护</a></li>
+				<li class="liClass"><a href="#" target="workareaFrame"><span class="glyphicon glyphicon-user"></span> 许可维护</a></li>
 				
 				
 			</ul>

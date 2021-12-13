@@ -110,11 +110,11 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<ul>
 				<li class="dropdown user-dropdown">
 					<a href="javascript:void(0)" style="text-decoration: none; color: white;" class="dropdown-toggle" data-toggle="dropdown">
-						<span class="glyphicon glyphicon-user"></span> 张三 <span class="caret"></span>
+						<span class="glyphicon glyphicon-user"></span> ${user.name} <span class="caret"></span>
+
 					</a>
 					<ul class="dropdown-menu">
 						<li><a href="workbench/index.jsp"><span class="glyphicon glyphicon-home"></span> 工作台</a></li>
-						<li><a href="settings/index.jsp"><span class="glyphicon glyphicon-wrench"></span> 系统设置</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#myInformation"><span class="glyphicon glyphicon-file"></span> 我的资料</a></li>
 						<li><a href="javascript:void(0)" data-toggle="modal" data-target="#editPwdModal"><span class="glyphicon glyphicon-edit"></span> 修改密码</a></li>
 						<li><a href="javascript:void(0);" data-toggle="modal" data-target="#exitModal"><span class="glyphicon glyphicon-off"></span> 退出</a></li>
@@ -143,7 +143,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<!-- 
 				<a href="org/index.jsp" style="text-decoration: none; color: red;">组织机构</a>
 				 -->
-				<a href="dept/index.html">部门管理</a>
+				<a href="settings/dept/index.html">部门管理</a>
 				<br>
 				<a href="settings/qx/index.jsp">权限管理</a>
 			</div>
@@ -181,7 +181,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 			<div style="position: relative; width: 34%; height: 50%; left: 66%; top: -200%">
 				数据管理
 				<br><br>
-				<a href="dictionary/index.html">数据字典表</a>
+				<a href="settings/dictionary/index.jsp">数据字典表</a>
 				<br>
 				<a href="javascript:void(0);">导入</a>
 				<br>

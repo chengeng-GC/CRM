@@ -148,6 +148,57 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 		})
 
 
+//为全选的复选框绑定事件，触发全选操作
+		$("#qx").click(function () {
+			$("input[name=xz]").prop("checked",this.checked);
+		})
+
+		$("#userBody").on("click",$("input[name=xz]"),function () {
+			$("#qx").prop("checked",$("input[name=xz]").length==$("input[name=xz]:checked").length);
+		})
+
+
+		//为删除按钮绑定事件,执行用户删除操作
+		$("#deleteBtn").click(function () {
+			//找到复选框中所有√的jquery对象
+			var $xz= $("input[name=xz]:checked");
+			if ($xz.length==0){
+				alert("请选择需要删除的记录");
+			}else {
+				//给用户一个提示，避免误删
+				if (confirm("确定删除所选中记录吗？")){
+					//同一个key多个value不建议使用json作为请求参数data的数据形式
+					//地址为xxx.do?id=xxx&id=xxx&id=xxx
+					//拼接data参数
+					var param="";
+					//将$xz中的每一个dom对象遍历出来，取其value值，就先当于取得需删除记录的id
+					for (var i=0;i<$xz.length;i++){
+						param += "id="+$($xz[i]).val();
+						//如果不是最后一个元素，需要追加一个&
+						if (i<$xz.length-1){
+							param+="&";
+						}
+					}
+
+					$.ajax({
+						url:"settings/user/delete.do",
+						data:param,
+						type: "post",
+						dataType:"json",
+						success:function(data){
+							if (data.success){
+								//删除成功后,局部刷新下页面
+								//回到第一页，每页条数不变
+								pageList(1,$("#userPage").bs_pagination('getOption','rowsPerPage'));
+							}else {
+								alert("删除用户失败");
+							}
+						}
+					})
+				}
+			}
+		})
+
 	});
 
 		//获取列表并分页

@@ -15,4 +15,6 @@ public interface UserService {
     PaginationVO<User> pageList(Map<String, Object> map);
 
     boolean save(User u);
+
+    boolean delete(String[] ids);
 }

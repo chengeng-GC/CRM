@@ -6,4 +6,22 @@
     <select id="getByTypeCode" resultType="DicValue">
         select * from tbl_dic_value where typeCode=#{typeCode} order by orderNo
     </select>
+    <select id="getTotalbyTypeCode" resultType="int">
+        select count(*) from tbl_dic_value
+        <where>
+        <if test="typeCode!=null and typeCode!=''">
+            typeCode like '%' #{typeCode} '%'
+        </if>
+    </where>
+    </select>
+    <select id="getByPage" resultType="DicValue">
+        select * from tbl_dic_value
+        <where>
+            <if test="typeCode!=null and typeCode!=''">
+                typeCode like '%' #{typeCode} '%'
+            </if>
+        </where>
+        order by orderNo
+        limit #{skipCount},#{pageSize}
+    </select>
 </mapper>

@@ -39,9 +39,25 @@ public class UserController extends HttpServlet {
             pageList(req,resp);
         }else if ("/settings/user/save.do".equals(path)){
             save(req,resp);
+        }else if ("/settings/user/delete.do".equals(path)){
+            delete(req,resp);
+        }else if ("/settings/user/xxx.do".equals(path)){
+            //xxx(req,resp);
+        }else if ("/settings/user/xxx.do".equals(path)){
+            //xxx(req,resp);
         }else if ("/settings/user/xxx.do".equals(path)){
             //xxx(req,resp);
         }
+    }
+
+    private void delete(HttpServletRequest req, HttpServletResponse resp) {
+        //System.out.println("到达delete页controller层");
+        UserService userService= (UserService) ServiceFactory.getService(new UserServiceImpl());
+        String ids[]=req.getParameterValues("id");
+        boolean flag=userService.delete(ids);
+        PrintJson.printJsonFlag(resp,flag);
+
+
     }
 
     private void save(HttpServletRequest req, HttpServletResponse resp) {
@@ -98,7 +114,7 @@ public class UserController extends HttpServlet {
         }
         }
 
-        System.out.println(name);
+       // System.out.println(name);
 
         Map<String,Object> map=new HashMap<String, Object>();
         map.put("name",name);

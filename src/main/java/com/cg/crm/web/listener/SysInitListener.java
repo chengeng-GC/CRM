@@ -22,6 +22,7 @@ public class SysInitListener implements ServletContextListener {
         //管业务层要7个List，用一个map装7个List
         Map<String, List<DicValue>> map=dicService.getAll();
         Set<String> set=map.keySet();
+        application.setAttribute("typeCode",set);
         for (String key:set){
             application.setAttribute(key,map.get(key));
         }

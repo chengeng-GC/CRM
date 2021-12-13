@@ -84,5 +84,15 @@ public class UserServiceImpl implements UserService {
         return flag;
     }
 
+    @Override
+    public boolean delete(String[] ids) {
+        boolean flag=true;
+        int count=userDao.delete(ids);
+        if (count!=ids.length){
+            flag=false;
+        }
+        return flag;
+    }
+
 
 }

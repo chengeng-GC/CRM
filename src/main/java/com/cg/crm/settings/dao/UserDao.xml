@@ -97,6 +97,15 @@
     #{createBy}
         )
 </insert>
+
+<delete id="delete">
+    delete from tbl_user where id in
+    <foreach collection="array" item="id" open="(" close=")" separator=",">
+        #{id}
+    </foreach>
+</delete>
+
+
 </mapper>
 
 

@@ -6,5 +6,10 @@
 <select id="getAll" resultType="DicType">
     select * from tbl_dic_type
 </select>
-
+<select id="getTotal" resultType="int">
+    select count(*) from tbl_dic_type
+</select>
+<select id="getByPage" resultType="DicType">
+    select * from tbl_dic_type limit #{skipCount},#{pageSize}
+</select>
 </mapper>

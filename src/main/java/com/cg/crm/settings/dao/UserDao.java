@@ -15,4 +15,6 @@ public interface UserDao {
     List<User> getUserListByCondition(Map<String, Object> map);
 
     int save(User u);
+
+    int delete(String[] ids);
 }

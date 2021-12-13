@@ -38,7 +38,17 @@
  <listener>
   <listener-class>com.cg.crm.web.listener.SysInitListener</listener-class>
  </listener>
-
+ <!-- 用户控制器-->
+ <servlet>
+  <servlet-name>DicController</servlet-name>
+  <servlet-class>com.cg.crm.settings.web.controller.DicController</servlet-class>
+ </servlet>
+ <servlet-mapping>
+  <servlet-name>DicController</servlet-name>
+  <url-pattern>/settings/dic/pageListType.do</url-pattern>
+  <url-pattern>/settings/dic/pageListValue.do</url-pattern>
+  <url-pattern>/settings/dic/xxxx.do</url-pattern>
+ </servlet-mapping>
 <!-- 用户控制器-->
 <servlet>
  <servlet-name>UserController</servlet-name>
@@ -49,6 +59,7 @@
   <url-pattern>/settings/user/login.do</url-pattern>
   <url-pattern>/settings/user/pageList.do</url-pattern>
   <url-pattern>/settings/user/save.do</url-pattern>
+  <url-pattern>/settings/user/delete.do</url-pattern>
  </servlet-mapping>
 <!-- 市场活动控制器-->
  <servlet>
