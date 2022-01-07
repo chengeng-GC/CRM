@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="<%=basePath%>" >
-    <meta charset="UTF-8">
+    <base href="<%=basePath%>/crm" >
+    <meta charset="UTF-8" http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 </head>
 <body>
 

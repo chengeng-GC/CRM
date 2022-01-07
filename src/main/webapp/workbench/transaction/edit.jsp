@@ -10,9 +10,9 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 <!DOCTYPE html>
 <html>
 <head>
-	<base href="<%=basePath%>" >
+	<base href="<%=basePath%>/crm" >
 
-	<meta charset="UTF-8">
+	<meta charset="UTF-8"http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 	<link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />

@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="<%=basePath%>" >
-    <meta charset="UTF-8">
+    <base href="<%=basePath%>/crm" >
+    <meta charset="UTF-8" http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <script src="ECharts/echarts.min.js"></script>
     <script src="jquery/jquery-1.11.1-min.js"></script>
     <script>

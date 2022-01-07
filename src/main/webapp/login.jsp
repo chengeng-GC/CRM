@@ -5,8 +5,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<base href="<%=basePath%>" >
-	<meta charset="UTF-8">
+	<base href="<%=basePath%>/crm" >
+<%--	将http资源 转换成https资源，防止因为安全问题，资源不被放行--%>
+	<meta charset="UTF-8" http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 	<link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet"/>
 	<script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 	<script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
